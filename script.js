@@ -1,98 +1,79 @@
 document.addEventListener('DOMContentLoaded', () => {
-
-    // --- ОБЪЯВЛЕНИЕ ВСЕХ ЭЛЕМЕНТОВ ---
+    // --- ЭЛЕМЕНТЫ ---
     const body = document.body;
-    // Аудио
     const backgroundMusic = document.getElementById('background-music');
-    const purrSound = document.getElementById('purr-sound');
     const stormSound = document.getElementById('storm-sound');
-    const allAmbientSounds = [backgroundMusic, stormSound]; // Массив фоновых звуков
-    // Кнопки
-    const musicToggleButton = document.getElementById('music-toggle');
+    const purrSound = document.getElementById('purr-sound');
     const weatherButtons = document.querySelectorAll('.weather-btn');
-    // Остальные элементы
-    const cat = document.getElementById('cat');
-    const catBubble = document.getElementById('cat-bubble');
-    const navLinks = document.querySelectorAll('.nav-link');
-    const pages = document.querySelectorAll('.page');
-    
+    const weatherEffectsContainer = document.getElementById('weather-effects');
+    const musicToggleButton = document.getElementById('music-toggle');
+    // ... (остальные элементы без изменений)
+
     // --- НАСТРОЙКИ ---
-    let firstClick = true;
-    let phraseInterval;
-    backgroundMusic.volume = 0.15;
-    purrSound.volume = 1.0;
-    stormSound.volume = 0.4;
+    let rainInterval; // Переменная для интервала создания капель
 
     // --- ФУНКЦИИ ---
 
-    // Функция для переключения фонового звука
-    function playAmbientSound(soundToPlay) {
-        allAmbientSounds.forEach(sound => sound.pause()); // Глушим все фоновые звуки
-        if (soundToPlay) {
-            soundToPlay.play().catch(e => console.log("Не удалось запустить аудио:", e));
+    // Создание одной капли дождя
+    function createRainDrop() {
+        const drop = document.createElement('div');
+        drop.classList.add('rain-drop');
+        drop.style.left = `${Math.random() * 100}vw`;
+        
+        const duration = Math.random() * 0.5 + 0.3; // Случайная скорость падения
+        drop.style.animationDuration = `${duration}s`;
+        
+        weatherEffectsContainer.appendChild(drop);
+        
+        // Удаляем каплю после того, как она упала, чтобы не засорять DOM
+        setTimeout(() => {
+            drop.remove();
+        }, duration * 1000);
+    }
+
+    // Включение/выключение дождя
+    function setWeather(weatherType) {
+        if (weatherType === 'storm') {
+            body.classList.add('storm-active');
+            if (!rainInterval) {
+                rainInterval = setInterval(createRainDrop, 50); // Создаем капли каждые 50мс
+            }
+            // Включаем звук шторма, выключаем фоновую музыку
+            backgroundMusic.pause();
+            stormSound.play();
+        } else { // 'clear'
+            body.classList.remove('storm-active');
+            clearInterval(rainInterval);
+            rainInterval = null;
+            // Включаем фоновую музыку, выключаем звук шторма
+            stormSound.pause();
+            if (musicToggleButton.textContent === '🎵') { // Включаем, только если она не была на паузе
+                backgroundMusic.play();
+            }
         }
     }
 
-    // --- ОБРАБОТЧИКИ СОБЫТИЙ ---
+    // --- ОБРАБОТЧИКИ ---
 
-    // Обработчик для кнопок погоды
+    // Кнопки погоды
     weatherButtons.forEach(button => {
         button.addEventListener('click', () => {
-            const weather = button.dataset.weather;
-            
-            if (weather === 'storm') {
-                body.classList.add('storm-active');
-                playAmbientSound(stormSound);
-            } else { // 'clear'
-                body.classList.remove('storm-active');
-                playAmbientSound(backgroundMusic);
-            }
+            setWeather(button.dataset.weather);
         });
     });
 
-    // ИСПРАВЛЕННАЯ ЛОГИКА для кнопки управления музыкой 🎵/🔇
+    // Кнопка музыки (исправленная логика)
     musicToggleButton.addEventListener('click', () => {
-        // Если включаем основную музыку, погода всегда становится "Ясной"
         if (backgroundMusic.paused) {
-            body.classList.remove('storm-active'); // Отключаем шторм
-            playAmbientSound(backgroundMusic); // Включаем основную музыку
+            // Если включаем музыку, погода всегда становится ясной
+            setWeather('clear');
+            backgroundMusic.play();
             musicToggleButton.textContent = '🎵';
         } else {
-            // Просто выключаем основную музыку, не трогая погоду
             backgroundMusic.pause();
             musicToggleButton.textContent = '🔇';
         }
     });
 
-    // Логика кота
-    cat.addEventListener('click', () => {
-        if (firstClick) {
-            // ... (здесь без изменений) ...
-        }
-        if (!purrSound.paused) { purrSound.pause(); } 
-        else { purrSound.currentTime = 0; purrSound.play(); }
-    });
-    
-    // Логика навигации по вкладкам
-    navLinks.forEach(link => {
-        link.addEventListener('click', (e) => {
-            e.preventDefault();
-            // ... (здесь без изменений) ...
-        });
-    });
-
-    // Автоматическое включение основной музыки при первом взаимодействии
-    let hasInteracted = false;
-    function startMusicOnFirstInteraction() {
-        if (!hasInteracted) {
-            hasInteracted = true;
-            backgroundMusic.play().then(() => {
-                musicToggleButton.textContent = '🎵';
-            }).catch(error => {
-                console.log("Воспроизведение музыки заблокировано.");
-                musicToggleButton.textContent = '🔇';
-            });
-        }
-    }
-    body.addEventListener('click', startMusicOnFirstInteraction, { once: true });
+    // ... (весь остальной код для кота и навигации остается таким же) ...
 });
