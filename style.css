@@ -1,123 +1,78 @@
-document.addEventListener('DOMContentLoaded', () => {
+@import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;700&display=swap');
 
-    // --- ВСЕ ЭЛЕМЕНТЫ ---
-    const backgroundMusic = document.getElementById('background-music');
-    const purrSound = document.getElementById('purr-sound');
-    const musicToggleButton = document.getElementById('music-toggle');
-    const cat = document.getElementById('cat');
-    const navLinks = document.querySelectorAll('.nav-link');
-    const pages = document.querySelectorAll('.page');
-    // Элементы чата
-    const chatWindow = document.getElementById('chat-window');
-    const chatForm = document.getElementById('chat-form');
-    const chatInput = document.getElementById('chat-input');
+/* --- ОБЩИЕ СТИЛИ --- */
+body {
+    background-color: #000;
+    color: #fff;
+    font-family: 'Comfortaa', cursive;
+    margin: 0;
+    overflow-x: hidden;
+    text-align: center;
+}
 
-    // --- НАСТРОЙКИ ---
-    backgroundMusic.volume = 0.15;
-    purrSound.volume = 1.0;
+/* --- ДИНАМИЧЕСКИЙ ФОН --- */
+/* ... (весь блок стилей для неба, звезд, солнца, луны и их анимаций остается БЕЗ ИЗМЕНЕНИЙ) ... */
+#sky-gradient { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -5; animation: day-night-cycle 120s linear infinite; }
+.stars, .twinkling, .nebula { position: fixed; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100%; display: block; animation: stars-fade 120s linear infinite; }
+.stars { background: #000 url(https://www.script-tutorials.com/demos/360/images/stars.png) repeat top center; z-index: -4; }
+.twinkling { background: transparent url(https://www.script-tutorials.com/demos/360/images/twinkling.png) repeat top center; z-index: -3; animation: move-twink-back 200s linear infinite, stars-fade 120s linear infinite; }
+.nebula { background: radial-gradient(ellipse at 70% 20%, rgba(200, 100, 255, 0.2) 0%, transparent 50%), radial-gradient(ellipse at 30% 80%, rgba(100, 150, 255, 0.2) 0%, transparent 40%); z-index: -3; }
+#orbit-container { position: fixed; top: 50%; left: 50%; width: 200vw; height: 200vw; margin-top: -100vw; margin-left: -100vw; z-index: -1; animation: celestial-orbit 120s linear infinite; }
+.sun, .moon { position: absolute; width: 100px; height: 100px; border-radius: 50%; top: 50%; left: 50%; margin-left: -50px; margin-top: -50px; }
+.sun { transform: translateY(-90vw); }
+.moon { transform: translateY(90vw); }
+.moon { background: #c0c0c0; background-image: radial-gradient(circle at 20% 30%, #e0e0e0 0%, #a0a0a0 100%); box-shadow: 0 0 40px #a0a0a0, 0 0 80px #fff, inset -15px -10px 20px rgba(0,0,0,0.3); }
+.sun { background: radial-gradient(ellipse at center, #f9d71c 0%, #f9a61c 60%, #e54d2e 100%); box-shadow: 0 0 50px #f9d71c, 0 0 100px #f9d71c, 0 0 150px #f9a61c; }
+@keyframes celestial-orbit { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+@keyframes day-night-cycle { 0% { background-color: #0c1445; } 20% { background-color: #ff7f50; } 40% { background-color: #87ceeb; } 50% { background-color: #87ceeb; } 60% { background-color: #87ceeb; } 80% { background-color: #ff4500; } 100% { background-color: #0c1445; } }
+@keyframes stars-fade { 0% { opacity: 1; } 20% { opacity: 0; } 80% { opacity: 0; } 100% { opacity: 1; } }
+@keyframes move-twink-back { from {background-position:0 0;} to {background-position:-10000px 5000px;} }
 
-    // --- "МОЗГ" КОТА: БАЗА ЗНАНИЙ С КЛЮЧЕВЫМИ СЛОВАМИ И ОТВЕТАМИ ---
-    const dialogueRules = {
-        'привет': ['Мррр... Привет, хозяйка!', 'Привет! Я как раз думал о тебе. И о еде.', 'Рад тебя видеть!'],
-        'дела': ['Дела? Лежу, мурчу, виляю хвостом. Всё по плану!', 'Лучше всех! Особенно, если ты рядом.'],
-        'люблю': ['И я тебя люблю! Больше, чем сон и даже больше, чем еду. Наверное.', 'Мурррррррррр ❤️'],
-        'скучаю': ['Я тоже очень скучаю. Каждый день.', 'Не скучай, скоро будем вместе! Я верю.'],
-        'soul': ['Да, это я!', 'Кто-то звал самого очаровательного кота на свете?'],
-        'пиздюк': ['Эй! Это только братан меня так называет!', 'Сам такой! Но ладно, тебе можно.'],
-        'кушать': ['Еда? Где? Я готов!', 'О, да! Моё любимое слово!'],
-        'пока': ['Уже уходишь? Мяу... :(', 'Возвращайся скорее!']
-    };
-    const defaultResponses = [
-        'Мяу?', 'Интересно... Расскажи еще.', 'Я тут задумался о вечности... и о вкусняшках.', 
-        'Даже не знаю, что на это ответить, я же просто кот :)', 'Мррр...'
-    ];
+/* --- ОСНОВНОЙ КОНТЕНТ --- */
+/* ... (стили для .content, header, nav, .page, .message-card остаются БЕЗ ИЗМЕНЕНИЙ) ... */
+.content { position: relative; z-index: 1; padding: 20px; max-width: 900px; margin: 40px auto; }
+header { display: flex; justify-content: center; align-items: center; position: relative; padding: 10px; }
+nav { margin: 0 auto; }
+.nav-link { color: #fff; text-decoration: none; font-size: 20px; margin: 0 20px; padding: 5px 10px; border-radius: 5px; transition: background-color 0.3s; }
+.nav-link:hover, .nav-link.active { background-color: rgba(255, 255, 255, 0.2); }
+#music-toggle { position: absolute; right: 20px; background: rgba(255, 255, 255, 0.2); border: none; color: white; font-size: 20px; border-radius: 50%; width: 40px; height: 40px; cursor: pointer; transition: background-color 0.3s; }
+#music-toggle:hover { background-color: rgba(255, 255, 255, 0.4); }
+.page { display: none; }
+.page.active { display: block; animation: fadeIn 0.8s; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+.messages-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 30px; }
+.message-card { background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); padding: 20px; border-radius: 10px; backdrop-filter: blur(5px); text-align: left; }
 
+/* --- НОВЫЕ СТИЛИ ДЛЯ ЧАТА С КОТОМ --- */
+.chat-container { max-width: 700px; margin: 30px auto; border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 10px; background: rgba(0, 0, 0, 0.2); backdrop-filter: blur(5px); }
+#chat-window { height: 60vh; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
+#chat-window::-webkit-scrollbar { width: 8px; }
+#chat-window::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); }
+#chat-window::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.3); border-radius: 4px; }
+.message { display: flex; align-items: flex-end; gap: 10px; max-width: 80%; animation: fadeIn 0.5s; }
+.message-bubble { padding: 10px 15px; border-radius: 15px; line-height: 1.5; }
+.user-message { align-self: flex-end; flex-direction: row-reverse; }
+.user-message .message-bubble { background: #4a69bd; border-bottom-right-radius: 3px; }
+.cat-message { align-self: flex-start; }
+.cat-message .message-bubble { background: #606060; border-bottom-left-radius: 3px; }
+#chat-form { display: flex; padding: 10px; border-top: 1px solid rgba(255, 255, 255, 0.2); }
+#chat-input { flex-grow: 1; border: none; background: transparent; color: white; font-family: 'Comfortaa', cursive; font-size: 16px; padding: 10px; }
+#chat-input:focus { outline: none; }
+#chat-form button { font-family: 'Comfortaa', cursive; font-size: 16px; padding: 10px 20px; border: none; background: #4a69bd; color: white; border-radius: 8px; cursor: pointer; transition: background-color 0.2s; }
+#chat-form button:hover { background: #5d81e0; }
 
-    // --- ФУНКЦИИ ЧАТА ---
-
-    function displayMessage(text, sender) {
-        const messageBubble = document.createElement('div');
-        messageBubble.classList.add('message', `${sender}-message`);
-        messageBubble.innerHTML = `<div class="message-bubble">${text}</div>`;
-        chatWindow.appendChild(messageBubble);
-        chatWindow.scrollTop = chatWindow.scrollHeight;
-    }
-
-    function getCatResponse(userInput) {
-        const lowerCaseInput = userInput.toLowerCase();
-        for (const keyword in dialogueRules) {
-            if (lowerCaseInput.includes(keyword)) {
-                const responses = dialogueRules[keyword];
-                return responses[Math.floor(Math.random() * responses.length)];
-            }
-        }
-        return defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
-    }
-
-    // --- ОБРАБОТЧИКИ СОБЫТИЙ ---
-
-    // Отправка сообщения в чате
-    if (chatForm) { // Добавлена проверка, чтобы избежать ошибок
-        chatForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const userInput = chatInput.value.trim();
-            if (userInput === '') return;
-
-            displayMessage(userInput, 'user');
-            chatInput.value = '';
-
-            setTimeout(() => {
-                const catResponse = getCatResponse(userInput);
-                displayMessage(catResponse, 'cat');
-            }, 1200);
-        });
-    }
-
-    // Приветственное сообщение от кота при открытии чата
-    let firstChatOpen = true;
-    const chatLink = document.querySelector('a[href="#chat"]');
-    if (chatLink) { // Добавлена проверка
-        chatLink.addEventListener('click', () => {
-            if(firstChatOpen && chatWindow){
-                setTimeout(() => {
-                    displayMessage('Привет! Напиши мне что-нибудь...', 'cat');
-                }, 500);
-                firstChatOpen = false;
-            }
-        });
-    }
-
-    // Логика кота (осталось только мурчание по клику)
-    cat.addEventListener('click', () => {
-        if (!purrSound.paused) { purrSound.pause(); } 
-        else { purrSound.currentTime = 0; purrSound.play(); }
-    });
-    
-    // Музыка и навигация
-    musicToggleButton.addEventListener('click', () => {
-        if (backgroundMusic.paused) { backgroundMusic.play(); musicToggleButton.textContent = '🎵'; } 
-        else { backgroundMusic.pause(); musicToggleButton.textContent = '🔇'; }
-    });
-
-    navLinks.forEach(link => {
-        link.addEventListener('click', (e) => {
-            e.preventDefault();
-            const targetId = link.getAttribute('href');
-            navLinks.forEach(l => l.classList.remove('active'));
-            pages.forEach(p => p.classList.remove('active'));
-            link.classList.add('active');
-            document.querySelector(targetId).classList.add('active');
-        });
-    });
-
-    // Автозапуск музыки
-    let musicStarted = false;
-    function playMusic() {
-        if (!musicStarted) {
-            backgroundMusic.play().then(() => {
-                musicStarted = true; musicToggleButton.textContent = '🎵';
-            }).catch(error => { musicToggleButton.textContent = '🔇'; });
-        }
-    }
-    document.body.addEventListener('click', playMusic, { once: true });
-});
+/* --- СТИЛИ КОТА (БЕЗ ОБЛАЧКА) --- */
+#cat-container { position: fixed; bottom: 10px; right: 20px; z-index: 100; width: 200px; height: 150px; }
+#cat { position: absolute; bottom: 0; left: 40px; width: 100px; height: 95px; cursor: pointer; }
+.cat-body, .cat-head, .ear, .cat-tail { background-color: #000; }
+.cat-body { position: absolute; bottom: 0; width: 100px; height: 50px; border-radius: 50px 50px 20px 20px; z-index: 2; }
+.cat-head { position: absolute; bottom: 35px; left: 20px; width: 60px; height: 60px; border-radius: 50%; z-index: 3; }
+.ear { position: absolute; top: -10px; width: 30px; height: 30px; background-color: #000; clip-path: polygon(50% 0, 0 100%, 100% 100%); }
+.ear.left { left: -5px; transform: rotate(-20deg); }
+.ear.right { right: -5px; transform: rotate(20deg); }
+.eye { position: absolute; top: 25px; width: 8px; height: 8px; background-color: #fff; border-radius: 50%; animation: blink 4s linear infinite; }
+.eye.left { left: 15px; }
+.eye.right { right: 15px; }
+.cat-tail { position: absolute; bottom: 5px; left: 80px; width: 15px; height: 80px; border-radius: 20px; transform-origin: bottom center; animation: tail-wag 3s ease-in-out infinite; z-index: 1; }
+@keyframes tail-wag { 0%, 100% { transform: rotate(-20deg); } 50% { transform: rotate(10deg); } }
+@keyframes blink { 0%, 90%, 100% { transform: scaleY(1); } 95% { transform: scaleY(0.1); } }
