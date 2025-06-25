@@ -4,12 +4,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const backgroundMusic = document.getElementById('background-music');
     const purrSound = document.getElementById('purr-sound');
 
-    backgroundMusic.volume = 0.3; 
+    backgroundMusic.volume = 0.2; // Музыка стала еще тише
     purrSound.volume = 1.0;
 
     // --- Логика для кота ---
     const cat = document.getElementById('cat');
     const catBubble = document.getElementById('cat-bubble');
+    let firstClick = true; // Флаг для отслеживания первого клика
+    let phraseInterval; // Переменная для интервала с фразами
 
     const catPhrases = [
         "Хозяйка, я люблю тебя!",
@@ -19,8 +21,25 @@ document.addEventListener('DOMContentLoaded', () => {
         "Мррр... Скучаю по тебе вместе с хозяином."
     ];
 
-    // По клику на кота - включаем или выключаем мурчание
+    // По клику на кота
     cat.addEventListener('click', () => {
+        // Логика для самого первого клика
+        if (firstClick) {
+            catBubble.classList.remove('show'); // Прячем подсказку "Жмякни на меня"
+            firstClick = false; // Меняем флаг, чтобы это больше не повторялось
+
+            // Запускаем появление случайных фраз ТОЛЬКО ПОСЛЕ первого клика
+            phraseInterval = setInterval(() => {
+                const randomIndex = Math.floor(Math.random() * catPhrases.length);
+                catBubble.textContent = catPhrases[randomIndex];
+                catBubble.classList.add('show');
+                setTimeout(() => {
+                    catBubble.classList.remove('show');
+                }, 5000);
+            }, 15000);
+        }
+
+        // Логика мурчания (работает при каждом клике)
         if (!purrSound.paused) {
             purrSound.pause();
         } else {
@@ -29,20 +48,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Кот говорит случайную фразу каждые 15 секунд
-    setInterval(() => {
-        const randomIndex = Math.floor(Math.random() * catPhrases.length);
-        catBubble.textContent = catPhrases[randomIndex];
-        catBubble.classList.add('show');
-        setTimeout(() => {
-            catBubble.classList.remove('show');
-        }, 5000);
-    }, 15000);
-
     // --- Логика навигации по вкладкам ---
     const navLinks = document.querySelectorAll('.nav-link');
     const pages = document.querySelectorAll('.page');
-
     navLinks.forEach(link => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
@@ -65,7 +73,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
     }
-    
     document.body.addEventListener('click', playMusic);
     document.body.addEventListener('keydown', playMusic);
 });
