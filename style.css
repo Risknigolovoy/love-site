@@ -1,32 +1,119 @@
 @import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;700&display=swap');
-body { background-color: #000; color: #fff; font-family: 'Comfortaa', cursive; margin: 0; overflow-x: hidden; text-align: center; }
-#sky-gradient { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -5; animation: day-night-cycle 120s linear infinite; }
-.stars, .twinkling, .nebula { position: fixed; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100%; display: block; animation: stars-fade 120s linear infinite; }
+
+/* --- ОБЩИЕ СТИЛИ И ИСПРАВЛЕНИЕ СКРОЛЛА --- */
+body {
+    background-color: #000; /* Базовый цвет, если градиент не загрузится */
+    color: #fff;
+    font-family: 'Comfortaa', cursive;
+    margin: 0;
+    overflow-x: hidden; /* Запрещаем горизонтальный скролл, но разрешаем вертикальный */
+    text-align: center;
+}
+
+/* --- НОВАЯ СИСТЕМА ФОНА И ДИНАМИЧЕСКОГО НЕБА --- */
+#sky-gradient {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: -5;
+    animation: day-night-cycle 120s linear infinite;
+}
+
+.stars, .twinkling, .nebula { position: fixed; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100%; display: block; }
 .stars { background: #000 url(https://www.script-tutorials.com/demos/360/images/stars.png) repeat top center; z-index: -4; }
-.twinkling { background: transparent url(https://www.script-tutorials.com/demos/360/images/twinkling.png) repeat top center; z-index: -3; animation: move-twink-back 200s linear infinite, stars-fade 120s linear infinite; }
+.twinkling { background: transparent url(https://www.script-tutorials.com/demos/360/images/twinkling.png) repeat top center; z-index: -3; animation: move-twink-back 200s linear infinite; }
 .nebula { background: radial-gradient(ellipse at 70% 20%, rgba(200, 100, 255, 0.2) 0%, transparent 50%), radial-gradient(ellipse at 30% 80%, rgba(100, 150, 255, 0.2) 0%, transparent 40%); z-index: -3; }
-#orbit-container { position: fixed; top: 50%; left: 50%; width: 200vw; height: 200vw; margin-top: -100vw; margin-left: -100vw; z-index: -1; animation: celestial-orbit 120s linear infinite; }
-.sun, .moon { position: absolute; width: 100px; height: 100px; border-radius: 50%; top: 50%; left: 50%; margin-left: -50px; margin-top: -50px; }
-.sun { transform: translateY(-90vw); }
-.moon { transform: translateY(90vw); }
+
+/* Анимация появления и исчезновения звезд/туманностей */
+.stars, .twinkling, .nebula {
+    animation: stars-fade 120s linear infinite;
+}
+
+/* Контейнер для орбиты Солнца и Луны */
+#orbit-container {
+    position: fixed;
+    top: 50%; left: 50%;
+    width: 200vw; /* Орбита больше экрана */
+    height: 200vw;
+    margin-top: -100vw;
+    margin-left: -100vw;
+    z-index: -1;
+    animation: celestial-orbit 120s linear infinite;
+}
+
+.sun, .moon {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    margin-left: -50px;
+    margin-top: -50px;
+}
+
+/* Положение Солнца и Луны на орбите */
+.sun { transform: translateY(-90vw); } /* Солнце наверху */
+.moon { transform: translateY(90vw); } /* Луна внизу, напротив Солнца */
+
+/* Стили для Солнца и Луны */
 .moon { background: #c0c0c0; background-image: radial-gradient(circle at 20% 30%, #e0e0e0 0%, #a0a0a0 100%); box-shadow: 0 0 40px #a0a0a0, 0 0 80px #fff, inset -15px -10px 20px rgba(0,0,0,0.3); }
 .sun { background: radial-gradient(ellipse at center, #f9d71c 0%, #f9a61c 60%, #e54d2e 100%); box-shadow: 0 0 50px #f9d71c, 0 0 100px #f9d71c, 0 0 150px #f9a61c; }
-@keyframes celestial-orbit { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-@keyframes day-night-cycle { 0% { background-color: #0c1445; } 20% { background-color: #ff7f50; } 40% { background-color: #87ceeb; } 50% { background-color: #87ceeb; } 60% { background-color: #87ceeb; } 80% { background-color: #ff4500; } 100% { background-color: #0c1445; } }
-@keyframes stars-fade { 0% { opacity: 1; } 20% { opacity: 0; } 80% { opacity: 0; } 100% { opacity: 1; } }
+
+
+/* --- КЛЮЧЕВЫЕ КАДРЫ ДЛЯ АНИМАЦИИ --- */
+@keyframes celestial-orbit {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@keyframes day-night-cycle {
+    0% { background-color: #0c1445; } /* Полночь (темно-синий) */
+    20% { background-color: #ff7f50; } /* Рассвет (коралловый/оранжевый) */
+    40% { background-color: #87ceeb; } /* День (голубое небо) */
+    50% { background-color: #87ceeb; } /* Полдень */
+    60% { background-color: #87ceeb; } /* День */
+    80% { background-color: #ff4500; } /* Закат (оранжево-красный) */
+    100% { background-color: #0c1445; } /* Полночь */
+}
+
+@keyframes stars-fade {
+    0% { opacity: 1; }   /* Ночь */
+    20% { opacity: 0; }  /* Рассвет, звезды исчезают */
+    80% { opacity: 0; }  /* Закат, звезды появляются */
+    100% { opacity: 1; } /* Ночь */
+}
+
 @keyframes move-twink-back { from {background-position:0 0;} to {background-position:-10000px 5000px;} }
+
+/* --- ОСНОВНОЙ КОНТЕНТ И КНОПКА МУЗЫКИ --- */
 .content { position: relative; z-index: 1; padding: 20px; max-width: 900px; margin: 40px auto; }
 header { display: flex; justify-content: center; align-items: center; position: relative; padding: 10px; }
 nav { margin: 0 auto; }
 .nav-link { color: #fff; text-decoration: none; font-size: 20px; margin: 0 20px; padding: 5px 10px; border-radius: 5px; transition: background-color 0.3s; }
 .nav-link:hover, .nav-link.active { background-color: rgba(255, 255, 255, 0.2); }
-#music-toggle { position: absolute; right: 20px; background: rgba(255, 255, 255, 0.2); border: none; color: white; font-size: 20px; border-radius: 50%; width: 40px; height: 40px; cursor: pointer; transition: background-color 0.3s; }
+
+#music-toggle {
+    position: absolute;
+    right: 20px;
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    font-size: 20px;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
 #music-toggle:hover { background-color: rgba(255, 255, 255, 0.4); }
+
 .page { display: none; }
 .page.active { display: block; animation: fadeIn 0.8s; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 .messages-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 30px; }
 .message-card { background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); padding: 20px; border-radius: 10px; backdrop-filter: blur(5px); text-align: left; }
+
+/* --- СТИЛИ КОТА (БЕЗ ИЗМЕНЕНИЙ) --- */
 #cat-container { position: fixed; bottom: 10px; right: 20px; z-index: 100; width: 200px; height: 150px; }
 #cat { position: absolute; bottom: 0; left: 40px; width: 100px; height: 95px; cursor: pointer; }
 .cat-body, .cat-head, .ear, .cat-tail { background-color: #000; }
