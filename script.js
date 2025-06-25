@@ -4,7 +4,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const backgroundMusic = document.getElementById('background-music');
     const purrSound = document.getElementById('purr-sound');
 
-    // Устанавливаем громкость: 30% для фона, 100% для мурчания
     backgroundMusic.volume = 0.3; 
     purrSound.volume = 1.0;
 
@@ -22,12 +21,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // По клику на кота - включаем или выключаем мурчание
     cat.addEventListener('click', () => {
-        // Проверяем, играет ли звук и не закончился ли он
         if (!purrSound.paused) {
-            purrSound.pause(); // Если играет - ставим на паузу
+            purrSound.pause();
         } else {
-            purrSound.currentTime = 0; // Возвращаем звук в начало
-            purrSound.play(); // Если не играет - запускаем
+            purrSound.currentTime = 0;
+            purrSound.play();
         }
     });
 
@@ -36,11 +34,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const randomIndex = Math.floor(Math.random() * catPhrases.length);
         catBubble.textContent = catPhrases[randomIndex];
         catBubble.classList.add('show');
-
         setTimeout(() => {
             catBubble.classList.remove('show');
         }, 5000);
-
     }, 15000);
 
     // --- Логика навигации по вкладкам ---
