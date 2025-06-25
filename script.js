@@ -32,14 +32,13 @@ document.addEventListener('DOMContentLoaded', () => {
         'Даже не знаю, что на это ответить, я же просто кот :)', 'Мррр...'
     ];
 
-
     // --- ФУНКЦИИ ЧАТА ---
     function displayMessage(text, sender) {
         const messageBubble = document.createElement('div');
         messageBubble.classList.add('message', `${sender}-message`);
         messageBubble.innerHTML = `<div class="message-bubble">${text}</div>`;
-        chatWindow.appendChild(messageBubble);
-        chatWindow.scrollTop = chatWindow.scrollHeight;
+        if(chatWindow) chatWindow.appendChild(messageBubble);
+        if(chatWindow) chatWindow.scrollTop = chatWindow.scrollHeight;
     }
 
     function getCatResponse(userInput) {
@@ -55,16 +54,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- ОБРАБОТЧИКИ СОБЫТИЙ ---
 
-    // Отправка сообщения в чате
     if (chatForm) {
         chatForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const userInput = chatInput.value.trim();
             if (userInput === '') return;
-
             displayMessage(userInput, 'user');
             chatInput.value = '';
-
             setTimeout(() => {
                 const catResponse = getCatResponse(userInput);
                 displayMessage(catResponse, 'cat');
@@ -72,27 +68,22 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Приветственное сообщение от кота при открытии чата
     let firstChatOpen = true;
     const chatLink = document.querySelector('a[href="#chat"]');
     if (chatLink) {
         chatLink.addEventListener('click', () => {
             if(firstChatOpen && chatWindow){
-                setTimeout(() => {
-                    displayMessage('Привет! Напиши мне что-нибудь...', 'cat');
-                }, 500);
+                setTimeout(() => { displayMessage('Привет! Напиши мне что-нибудь...', 'cat'); }, 500);
                 firstChatOpen = false;
             }
         });
     }
 
-    // Логика кота (осталось только мурчание по клику)
     cat.addEventListener('click', () => {
         if (!purrSound.paused) { purrSound.pause(); } 
         else { purrSound.currentTime = 0; purrSound.play(); }
     });
     
-    // Музыка и навигация
     musicToggleButton.addEventListener('click', () => {
         if (backgroundMusic.paused) { backgroundMusic.play(); musicToggleButton.textContent = '🎵'; } 
         else { backgroundMusic.pause(); musicToggleButton.textContent = '🔇'; }
@@ -102,14 +93,22 @@ document.addEventListener('DOMContentLoaded', () => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
             const targetId = link.getAttribute('href');
+            
             navLinks.forEach(l => l.classList.remove('active'));
             pages.forEach(p => p.classList.remove('active'));
+            
+            // Управление видимостью кота
+            if (targetId === '#chat') {
+                document.body.classList.add('chat-active');
+            } else {
+                document.body.classList.remove('chat-active');
+            }
+            
             link.classList.add('active');
             document.querySelector(targetId).classList.add('active');
         });
     });
 
-    // Автозапуск музыки
     let musicStarted = false;
     function playMusic() {
         if (!musicStarted) {
