@@ -34,7 +34,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // --- ФУНКЦИИ ЧАТА ---
-
     function displayMessage(text, sender) {
         const messageBubble = document.createElement('div');
         messageBubble.classList.add('message', `${sender}-message`);
@@ -57,7 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- ОБРАБОТЧИКИ СОБЫТИЙ ---
 
     // Отправка сообщения в чате
-    if (chatForm) { // Добавлена проверка, чтобы избежать ошибок
+    if (chatForm) {
         chatForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const userInput = chatInput.value.trim();
@@ -76,7 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Приветственное сообщение от кота при открытии чата
     let firstChatOpen = true;
     const chatLink = document.querySelector('a[href="#chat"]');
-    if (chatLink) { // Добавлена проверка
+    if (chatLink) {
         chatLink.addEventListener('click', () => {
             if(firstChatOpen && chatWindow){
                 setTimeout(() => {
