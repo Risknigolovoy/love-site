@@ -16,8 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
     backgroundMusic.volume = 0.15;
     purrSound.volume = 1.0;
 
-    // --- "МОЗГ" КОТА: БАЗА ЗНАНИЙ ---
-    // Добавляй сюда новые ключевые слова (в кавычках) и варианты ответов
+    // --- "МОЗГ" КОТА: БАЗА ЗНАНИЙ С КЛЮЧЕВЫМИ СЛОВАМИ И ОТВЕТАМИ ---
     const dialogueRules = {
         'привет': ['Мррр... Привет, хозяйка!', 'Привет! Я как раз думал о тебе. И о еде.', 'Рад тебя видеть!'],
         'дела': ['Дела? Лежу, мурчу, виляю хвостом. Всё по плану!', 'Лучше всех! Особенно, если ты рядом.'],
@@ -33,7 +32,9 @@ document.addEventListener('DOMContentLoaded', () => {
         'Даже не знаю, что на это ответить, я же просто кот :)', 'Мррр...'
     ];
 
+
     // --- ФУНКЦИИ ЧАТА ---
+
     function displayMessage(text, sender) {
         const messageBubble = document.createElement('div');
         messageBubble.classList.add('message', `${sender}-message`);
@@ -54,27 +55,39 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- ОБРАБОТЧИКИ СОБЫТИЙ ---
-    chatForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const userInput = chatInput.value.trim();
-        if (userInput === '') return;
-        displayMessage(userInput, 'user');
-        chatInput.value = '';
-        setTimeout(() => {
-            const catResponse = getCatResponse(userInput);
-            displayMessage(catResponse, 'cat');
-        }, 1200);
-    });
 
+    // Отправка сообщения в чате
+    if (chatForm) { // Добавлена проверка, чтобы избежать ошибок
+        chatForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const userInput = chatInput.value.trim();
+            if (userInput === '') return;
+
+            displayMessage(userInput, 'user');
+            chatInput.value = '';
+
+            setTimeout(() => {
+                const catResponse = getCatResponse(userInput);
+                displayMessage(catResponse, 'cat');
+            }, 1200);
+        });
+    }
+
+    // Приветственное сообщение от кота при открытии чата
     let firstChatOpen = true;
-    document.querySelector('a[href="#chat"]').addEventListener('click', () => {
-        if(firstChatOpen){
-            setTimeout(() => { displayMessage('Привет! Напиши мне что-нибудь...', 'cat'); }, 500);
-            firstChatOpen = false;
-        }
-    });
+    const chatLink = document.querySelector('a[href="#chat"]');
+    if (chatLink) { // Добавлена проверка
+        chatLink.addEventListener('click', () => {
+            if(firstChatOpen && chatWindow){
+                setTimeout(() => {
+                    displayMessage('Привет! Напиши мне что-нибудь...', 'cat');
+                }, 500);
+                firstChatOpen = false;
+            }
+        });
+    }
 
-    // У кота осталась только одна функция по клику - мурчать
+    // Логика кота (осталось только мурчание по клику)
     cat.addEventListener('click', () => {
         if (!purrSound.paused) { purrSound.pause(); } 
         else { purrSound.currentTime = 0; purrSound.play(); }
@@ -97,6 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // Автозапуск музыки
     let musicStarted = false;
     function playMusic() {
         if (!musicStarted) {
