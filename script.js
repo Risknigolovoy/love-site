@@ -1,19 +1,23 @@
 document.addEventListener('DOMContentLoaded', () => {
+
+    // --- Настройки аудио ---
     const backgroundMusic = document.getElementById('background-music');
     const purrSound = document.getElementById('purr-sound');
     const musicToggleButton = document.getElementById('music-toggle');
+
+    backgroundMusic.volume = 0.15; // Музыка стала еще тише
+    purrSound.volume = 1.0;
+
+    // --- Логика для кота ---
     const cat = document.getElementById('cat');
     const catBubble = document.getElementById('cat-bubble');
     let firstClick = true;
     let phraseInterval;
+
     const catPhrases = [
         "Хозяйка, я люблю тебя!", "Окак...", "Веришь нет, я забыл, когда в последний раз ел...",
         "Меня зовут Soul, но братан величает меня Пиздюк :)", "Мррр... Скучаю по тебе вместе с хозяином."
     ];
-    const navLinks = document.querySelectorAll('.nav-link');
-    const pages = document.querySelectorAll('.page');
-    backgroundMusic.volume = 0.15;
-    purrSound.volume = 1.0;
 
     cat.addEventListener('click', () => {
         if (firstClick) {
@@ -30,6 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
         else { purrSound.currentTime = 0; purrSound.play(); }
     });
     
+    // --- НОВАЯ ЛОГИКА: Управление музыкой ---
     musicToggleButton.addEventListener('click', () => {
         if (backgroundMusic.paused) {
             backgroundMusic.play();
@@ -40,6 +45,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // --- Логика навигации по вкладкам ---
+    const navLinks = document.querySelectorAll('.nav-link');
+    const pages = document.querySelectorAll('.page');
     navLinks.forEach(link => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
@@ -51,15 +59,16 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // --- Автоматическое включение фоновой музыки ---
     let musicStarted = false;
     function playMusic() {
         if (!musicStarted) {
             backgroundMusic.play().then(() => {
                 musicStarted = true;
-                musicToggleButton.textContent = '🎵';
+                musicToggleButton.textContent = '🎵'; // Обновляем иконку, если музыка включилась
             }).catch(error => {
                 console.log("Воспроизведение музыки заблокировано. Нужно действие пользователя.");
-                musicToggleButton.textContent = '🔇';
+                musicToggleButton.textContent = '🔇'; // Показываем, что музыка выключена
             });
         }
     }
