@@ -1,9 +1,16 @@
 document.addEventListener('DOMContentLoaded', () => {
 
+    // --- Настройки аудио ---
+    const backgroundMusic = document.getElementById('background-music');
+    const purrSound = document.getElementById('purr-sound');
+
+    // Устанавливаем громкость: 30% для фона, 100% для мурчания
+    backgroundMusic.volume = 0.3; 
+    purrSound.volume = 1.0;
+
     // --- Логика для кота ---
     const cat = document.getElementById('cat');
     const catBubble = document.getElementById('cat-bubble');
-    const purrSound = document.getElementById('purr-sound');
 
     const catPhrases = [
         "Хозяйка, я люблю тебя!",
@@ -13,27 +20,28 @@ document.addEventListener('DOMContentLoaded', () => {
         "Мррр... Скучаю по тебе вместе с хозяином."
     ];
 
-    // По клику на кота - мурчание
+    // По клику на кота - включаем или выключаем мурчание
     cat.addEventListener('click', () => {
-        purrSound.currentTime = 0; // Начать сначала, если уже играет
-        purrSound.play();
+        // Проверяем, играет ли звук и не закончился ли он
+        if (!purrSound.paused) {
+            purrSound.pause(); // Если играет - ставим на паузу
+        } else {
+            purrSound.currentTime = 0; // Возвращаем звук в начало
+            purrSound.play(); // Если не играет - запускаем
+        }
     });
 
     // Кот говорит случайную фразу каждые 15 секунд
     setInterval(() => {
-        // Выбираем случайную фразу
         const randomIndex = Math.floor(Math.random() * catPhrases.length);
         catBubble.textContent = catPhrases[randomIndex];
-
-        // Показываем сообщение
         catBubble.classList.add('show');
 
-        // Прячем сообщение через 5 секунд
         setTimeout(() => {
             catBubble.classList.remove('show');
         }, 5000);
 
-    }, 15000); // 15000 миллисекунд = 15 секунд
+    }, 15000);
 
     // --- Логика навигации по вкладкам ---
     const navLinks = document.querySelectorAll('.nav-link');
@@ -41,37 +49,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
     navLinks.forEach(link => {
         link.addEventListener('click', (e) => {
-            e.preventDefault(); // Отменяем стандартный переход по ссылке
-
-            const targetId = link.getAttribute('href'); // Получаем #home или #messages
-
-            // Убираем класс 'active' у всех ссылок и страниц
+            e.preventDefault();
+            const targetId = link.getAttribute('href');
             navLinks.forEach(l => l.classList.remove('active'));
             pages.forEach(p => p.classList.remove('active'));
-            
-            // Добавляем класс 'active' нужной ссылке и странице
             link.classList.add('active');
             document.querySelector(targetId).classList.add('active');
         });
     });
 
     // --- Автоматическое включение фоновой музыки ---
-    // Современные браузеры блокируют авто-воспроизведение звука.
-    // Этот код попытается включить музыку после первого действия пользователя на странице.
-    const backgroundMusic = document.getElementById('background-music');
     let musicStarted = false;
-
     function playMusic() {
         if (!musicStarted) {
             backgroundMusic.play().then(() => {
                 musicStarted = true;
             }).catch(error => {
-                console.log("Воспроизведение заблокировано браузером. Нужно взаимодействие с пользователем.");
+                console.log("Воспроизведение музыки заблокировано. Нужно действие пользователя.");
             });
         }
     }
     
-    // Пытаемся запустить музыку при любом клике на странице
     document.body.addEventListener('click', playMusic);
     document.body.addEventListener('keydown', playMusic);
 });
