@@ -1,53 +1,91 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    // --- Настройки аудио ---
+    // --- ВСЕ ЭЛЕМЕНТЫ ---
     const backgroundMusic = document.getElementById('background-music');
     const purrSound = document.getElementById('purr-sound');
     const musicToggleButton = document.getElementById('music-toggle');
+    const cat = document.getElementById('cat');
+    const navLinks = document.querySelectorAll('.nav-link');
+    const pages = document.querySelectorAll('.page');
+    // Элементы чата
+    const chatWindow = document.getElementById('chat-window');
+    const chatForm = document.getElementById('chat-form');
+    const chatInput = document.getElementById('chat-input');
 
-    backgroundMusic.volume = 0.15; // Музыка стала еще тише
+    // --- НАСТРОЙКИ ---
+    backgroundMusic.volume = 0.15;
     purrSound.volume = 1.0;
 
-    // --- Логика для кота ---
-    const cat = document.getElementById('cat');
-    const catBubble = document.getElementById('cat-bubble');
-    let firstClick = true;
-    let phraseInterval;
-
-    const catPhrases = [
-        "Хозяйка, я люблю тебя!", "Окак...", "Веришь нет, я забыл, когда в последний раз ел...",
-        "Меня зовут Soul, но братан величает меня Пиздюк :)", "Мррр... Скучаю по тебе вместе с хозяином."
+    // --- "МОЗГ" КОТА: БАЗА ЗНАНИЙ ---
+    // Добавляй сюда новые ключевые слова (в кавычках) и варианты ответов
+    const dialogueRules = {
+        'привет': ['Мррр... Привет, хозяйка!', 'Привет! Я как раз думал о тебе. И о еде.', 'Рад тебя видеть!'],
+        'дела': ['Дела? Лежу, мурчу, виляю хвостом. Всё по плану!', 'Лучше всех! Особенно, если ты рядом.'],
+        'люблю': ['И я тебя люблю! Больше, чем сон и даже больше, чем еду. Наверное.', 'Мурррррррррр ❤️'],
+        'скучаю': ['Я тоже очень скучаю. Каждый день.', 'Не скучай, скоро будем вместе! Я верю.'],
+        'soul': ['Да, это я!', 'Кто-то звал самого очаровательного кота на свете?'],
+        'пиздюк': ['Эй! Это только братан меня так называет!', 'Сам такой! Но ладно, тебе можно.'],
+        'кушать': ['Еда? Где? Я готов!', 'О, да! Моё любимое слово!'],
+        'пока': ['Уже уходишь? Мяу... :(', 'Возвращайся скорее!']
+    };
+    const defaultResponses = [
+        'Мяу?', 'Интересно... Расскажи еще.', 'Я тут задумался о вечности... и о вкусняшках.', 
+        'Даже не знаю, что на это ответить, я же просто кот :)', 'Мррр...'
     ];
 
-    cat.addEventListener('click', () => {
-        if (firstClick) {
-            catBubble.classList.remove('show');
-            firstClick = false;
-            phraseInterval = setInterval(() => {
-                const randomIndex = Math.floor(Math.random() * catPhrases.length);
-                catBubble.textContent = catPhrases[randomIndex];
-                catBubble.classList.add('show');
-                setTimeout(() => { catBubble.classList.remove('show'); }, 5000);
-            }, 15000);
+    // --- ФУНКЦИИ ЧАТА ---
+    function displayMessage(text, sender) {
+        const messageBubble = document.createElement('div');
+        messageBubble.classList.add('message', `${sender}-message`);
+        messageBubble.innerHTML = `<div class="message-bubble">${text}</div>`;
+        chatWindow.appendChild(messageBubble);
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+    }
+
+    function getCatResponse(userInput) {
+        const lowerCaseInput = userInput.toLowerCase();
+        for (const keyword in dialogueRules) {
+            if (lowerCaseInput.includes(keyword)) {
+                const responses = dialogueRules[keyword];
+                return responses[Math.floor(Math.random() * responses.length)];
+            }
         }
+        return defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
+    }
+
+    // --- ОБРАБОТЧИКИ СОБЫТИЙ ---
+    chatForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const userInput = chatInput.value.trim();
+        if (userInput === '') return;
+        displayMessage(userInput, 'user');
+        chatInput.value = '';
+        setTimeout(() => {
+            const catResponse = getCatResponse(userInput);
+            displayMessage(catResponse, 'cat');
+        }, 1200);
+    });
+
+    let firstChatOpen = true;
+    document.querySelector('a[href="#chat"]').addEventListener('click', () => {
+        if(firstChatOpen){
+            setTimeout(() => { displayMessage('Привет! Напиши мне что-нибудь...', 'cat'); }, 500);
+            firstChatOpen = false;
+        }
+    });
+
+    // У кота осталась только одна функция по клику - мурчать
+    cat.addEventListener('click', () => {
         if (!purrSound.paused) { purrSound.pause(); } 
         else { purrSound.currentTime = 0; purrSound.play(); }
     });
     
-    // --- НОВАЯ ЛОГИКА: Управление музыкой ---
+    // Музыка и навигация
     musicToggleButton.addEventListener('click', () => {
-        if (backgroundMusic.paused) {
-            backgroundMusic.play();
-            musicToggleButton.textContent = '🎵';
-        } else {
-            backgroundMusic.pause();
-            musicToggleButton.textContent = '🔇';
-        }
+        if (backgroundMusic.paused) { backgroundMusic.play(); musicToggleButton.textContent = '🎵'; } 
+        else { backgroundMusic.pause(); musicToggleButton.textContent = '🔇'; }
     });
 
-    // --- Логика навигации по вкладкам ---
-    const navLinks = document.querySelectorAll('.nav-link');
-    const pages = document.querySelectorAll('.page');
     navLinks.forEach(link => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
@@ -59,19 +97,13 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // --- Автоматическое включение фоновой музыки ---
     let musicStarted = false;
     function playMusic() {
         if (!musicStarted) {
             backgroundMusic.play().then(() => {
-                musicStarted = true;
-                musicToggleButton.textContent = '🎵'; // Обновляем иконку, если музыка включилась
-            }).catch(error => {
-                console.log("Воспроизведение музыки заблокировано. Нужно действие пользователя.");
-                musicToggleButton.textContent = '🔇'; // Показываем, что музыка выключена
-            });
+                musicStarted = true; musicToggleButton.textContent = '🎵';
+            }).catch(error => { musicToggleButton.textContent = '🔇'; });
         }
     }
-    document.body.addEventListener('click', playMusic);
-    document.body.addEventListener('keydown', playMusic);
+    document.body.addEventListener('click', playMusic, { once: true });
 });
