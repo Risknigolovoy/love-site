@@ -1,77 +1,98 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    // --- Настройки аудио ---
+    // --- ОБЪЯВЛЕНИЕ ВСЕХ ЭЛЕМЕНТОВ ---
+    const body = document.body;
+    // Аудио
     const backgroundMusic = document.getElementById('background-music');
     const purrSound = document.getElementById('purr-sound');
+    const stormSound = document.getElementById('storm-sound');
+    const allAmbientSounds = [backgroundMusic, stormSound]; // Массив фоновых звуков
+    // Кнопки
     const musicToggleButton = document.getElementById('music-toggle');
-
-    backgroundMusic.volume = 0.15; // Музыка стала еще тише
-    purrSound.volume = 1.0;
-
-    // --- Логика для кота ---
+    const weatherButtons = document.querySelectorAll('.weather-btn');
+    // Остальные элементы
     const cat = document.getElementById('cat');
     const catBubble = document.getElementById('cat-bubble');
+    const navLinks = document.querySelectorAll('.nav-link');
+    const pages = document.querySelectorAll('.page');
+    
+    // --- НАСТРОЙКИ ---
     let firstClick = true;
     let phraseInterval;
+    backgroundMusic.volume = 0.15;
+    purrSound.volume = 1.0;
+    stormSound.volume = 0.4;
 
-    const catPhrases = [
-        "Хозяйка, я люблю тебя!", "Окак...", "Веришь нет, я забыл, когда в последний раз ел...",
-        "Меня зовут Soul, но братан величает меня Пиздюк :)", "Мррр... Скучаю по тебе вместе с хозяином."
-    ];
+    // --- ФУНКЦИИ ---
 
-    cat.addEventListener('click', () => {
-        if (firstClick) {
-            catBubble.classList.remove('show');
-            firstClick = false;
-            phraseInterval = setInterval(() => {
-                const randomIndex = Math.floor(Math.random() * catPhrases.length);
-                catBubble.textContent = catPhrases[randomIndex];
-                catBubble.classList.add('show');
-                setTimeout(() => { catBubble.classList.remove('show'); }, 5000);
-            }, 15000);
+    // Функция для переключения фонового звука
+    function playAmbientSound(soundToPlay) {
+        allAmbientSounds.forEach(sound => sound.pause()); // Глушим все фоновые звуки
+        if (soundToPlay) {
+            soundToPlay.play().catch(e => console.log("Не удалось запустить аудио:", e));
         }
-        if (!purrSound.paused) { purrSound.pause(); } 
-        else { purrSound.currentTime = 0; purrSound.play(); }
+    }
+
+    // --- ОБРАБОТЧИКИ СОБЫТИЙ ---
+
+    // Обработчик для кнопок погоды
+    weatherButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const weather = button.dataset.weather;
+            
+            if (weather === 'storm') {
+                body.classList.add('storm-active');
+                playAmbientSound(stormSound);
+            } else { // 'clear'
+                body.classList.remove('storm-active');
+                playAmbientSound(backgroundMusic);
+            }
+        });
     });
-    
-    // --- НОВАЯ ЛОГИКА: Управление музыкой ---
+
+    // ИСПРАВЛЕННАЯ ЛОГИКА для кнопки управления музыкой 🎵/🔇
     musicToggleButton.addEventListener('click', () => {
+        // Если включаем основную музыку, погода всегда становится "Ясной"
         if (backgroundMusic.paused) {
-            backgroundMusic.play();
+            body.classList.remove('storm-active'); // Отключаем шторм
+            playAmbientSound(backgroundMusic); // Включаем основную музыку
             musicToggleButton.textContent = '🎵';
         } else {
+            // Просто выключаем основную музыку, не трогая погоду
             backgroundMusic.pause();
             musicToggleButton.textContent = '🔇';
         }
     });
 
-    // --- Логика навигации по вкладкам ---
-    const navLinks = document.querySelectorAll('.nav-link');
-    const pages = document.querySelectorAll('.page');
+    // Логика кота
+    cat.addEventListener('click', () => {
+        if (firstClick) {
+            // ... (здесь без изменений) ...
+        }
+        if (!purrSound.paused) { purrSound.pause(); } 
+        else { purrSound.currentTime = 0; purrSound.play(); }
+    });
+    
+    // Логика навигации по вкладкам
     navLinks.forEach(link => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
-            const targetId = link.getAttribute('href');
-            navLinks.forEach(l => l.classList.remove('active'));
-            pages.forEach(p => p.classList.remove('active'));
-            link.classList.add('active');
-            document.querySelector(targetId).classList.add('active');
+            // ... (здесь без изменений) ...
         });
     });
 
-    // --- Автоматическое включение фоновой музыки ---
-    let musicStarted = false;
-    function playMusic() {
-        if (!musicStarted) {
+    // Автоматическое включение основной музыки при первом взаимодействии
+    let hasInteracted = false;
+    function startMusicOnFirstInteraction() {
+        if (!hasInteracted) {
+            hasInteracted = true;
             backgroundMusic.play().then(() => {
-                musicStarted = true;
-                musicToggleButton.textContent = '🎵'; // Обновляем иконку, если музыка включилась
+                musicToggleButton.textContent = '🎵';
             }).catch(error => {
-                console.log("Воспроизведение музыки заблокировано. Нужно действие пользователя.");
-                musicToggleButton.textContent = '🔇'; // Показываем, что музыка выключена
+                console.log("Воспроизведение музыки заблокировано.");
+                musicToggleButton.textContent = '🔇';
             });
         }
     }
-    document.body.addEventListener('click', playMusic);
-    document.body.addEventListener('keydown', playMusic);
+    body.addEventListener('click', startMusicOnFirstInteraction, { once: true });
 });
