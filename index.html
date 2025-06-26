@@ -49,10 +49,7 @@
 
             <section id="novella" class="page">
                 <h2>Новелла о нас</h2>
-                <div class="message-card">
-                    <h3>Глава 1: Два города, одна душа</h3>
-                    <p>Холодный свет экрана освещал лицо Марии. За окном выл ветер, вторя буре в ее душе. Каждый день был похож на предыдущий: серый, безрадостный, наполненный упреками родителей и ощущением безысходности. Депрессия окутывала ее плотным, колючим одеялом. Единственным просветом был телефон, вибрирующий от его сообщения.<br><br>В тысяче километров от нее Марат пересчитывал мятые купюры. Снова не хватает. Он работал до изнеможения, хватаясь за любую возможность, чтобы собрать на билет. Билет домой. К ней. Его руки гудели от усталости, но в сердце горел огонь. Он вспоминал ее смех, ее глаза, тепло ее рук. Эти воспоминания были его топливом. "Я люблю тебя", — печатал он, и эти слова летели через города, пробиваясь сквозь ее тоску.<br><br>"Я тоже тебя люблю. Очень скучаю", — отвечала она, и на ее щеке блеснула одинокая слеза. Это была слеза грусти и одновременно радости. Грусти от разлуки и радости от того, что в этом огромном, холодном мире есть он. Ее Марат. Ее мечта и ее надежда. Они оба знали, что эта разлука — лишь временное испытание. И тем слаще будет их встреча.</p>
-                </div>
+                <div class="message-card"><h3>Глава 1: Два города, одна душа</h3><p>Холодный свет экрана освещал лицо Марии...</p></div>
             </section>
             
             <section id="starmap" class="page">
@@ -65,16 +62,22 @@
             
             <section id="planet-creator" class="page">
                 <h2>Планета Нашей Мечты</h2>
-                <p>Создай здесь наш собственный мир, и он появится в нашей вселенной.</p>
+                <p>Создай здесь наш собственный мир. Он будет вращаться в нашей вселенной.</p>
                 <div class="creator-layout">
-                    <div class="planet-preview-container"><div id="planet-preview"></div></div>
+                    <div class="planet-preview-container">
+                        <div id="planet-preview-wrapper">
+                            <svg id="planet-preview-svg" viewbox="0 0 250 250"></svg>
+                        </div>
+                    </div>
                     <div class="planet-controls">
                         <div class="control-group"><label for="planet-name">Имя планеты:</label><input type="text" id="planet-name" placeholder="Например, Элизиум"></div>
                         <div class="control-group"><label for="ocean-color">Цвет океанов:</label><input type="color" id="ocean-color" value="#4a90e2"></div>
                         <div class="control-group"><label for="continent-color">Цвет материков:</label><input type="color" id="continent-color" value="#8bc34a"></div>
-                        <div class="control-group"><label class="toggle-label"><span>Облака:</span><input type="checkbox" id="cloud-toggle"><span class="toggle-switch"></span></label></div>
-                        <div class="control-group"><label class="toggle-label"><span>Кольца:</span><input type="checkbox" id="rings-toggle"><span class="toggle-switch"></span></label></div>
-                        <button id="save-planet-button">Сохранить планету</button>
+                        <div class="control-group"><label for="glow-color">Цвет атмосферы:</label><input type="color" id="glow-color" value="#ffffff"></div>
+                        <div class="control-group"><label for="moon-count">Количество спутников:</label><select id="moon-count"><option value="0">0</option><option value="1">1</option><option value="2">2</option></select></div>
+                        <div class="control-group" id="moon-type-group" style="display: none;"><label for="moon-type">Тип спутника:</label><select id="moon-type"><option value="ice">Ледяной</option><option value="volcanic">Вулканический</option></select></div>
+                        <div class="control-group"><label class="toggle-label"><span>Огни цивилизации:</span><input type="checkbox" id="lights-toggle"><span class="toggle-switch"></span></label></div>
+                        <div class="control-group button-group"><button id="clear-continents-button">Очистить</button><button id="save-planet-button">Сохранить</button></div>
                     </div>
                 </div>
             </section>
