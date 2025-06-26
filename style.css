@@ -2,7 +2,7 @@
 body {
     background-color: #000;
     color: #fff;
-    font-family: 'Comfortaa', cursive;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Изменен шрифт */
     margin: 0;
     overflow-x: hidden;
     text-align: center;
@@ -11,8 +11,8 @@ body {
 /* --- ДИНАМИЧЕСКИЙ ФОН --- */
 #sky-gradient { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -5; animation: day-night-cycle 120s linear infinite; }
 .stars, .twinkling, .nebula { position: fixed; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100%; display: block; animation: stars-fade 120s linear infinite; }
-.stars { background: #000 url(https://www.script-tutorials.com/demos/360/images/stars.png) repeat top center; z-index: -4; }
-.twinkling { background: transparent url(https://www.script-tutorials.com/demos/360/images/twinkling.png) repeat top center; z-index: -3; animation: move-twink-back 200s linear infinite, stars-fade 120s linear infinite; }
+.stars { background: #000 url(https://www.script-tutorials.com/demos/360/images/stars.PNG) repeat top center; z-index: -4; }
+.twinkling { background: transparent url(https://www.script-tutorials.com/demos/360/images/twinkling.PNG) repeat top center; z-index: -3; animation: move-twink-back 200s linear infinite, stars-fade 120s linear infinite; }
 .nebula { background: radial-gradient(ellipse at 70% 20%, rgba(200, 100, 255, 0.2) 0%, transparent 50%), radial-gradient(ellipse at 30% 80%, rgba(100, 150, 255, 0.2) 0%, transparent 40%); z-index: -3; }
 #orbit-container { position: fixed; top: 50%; left: 50%; width: 200vw; height: 200vw; margin-top: -100vw; margin-left: -100vw; z-index: -1; animation: celestial-orbit 120s linear infinite; }
 .sun, .moon { position: absolute; width: 100px; height: 100px; border-radius: 50%; top: 50%; left: 50%; margin-left: -50px; margin-top: -50px; }
@@ -27,39 +27,146 @@ body {
 
 /* --- ОСНОВНОЙ КОНТЕНТ --- */
 .content { position: relative; z-index: 1; padding: 20px; max-width: 900px; margin: 40px auto; }
-header { display: flex; justify-content: center; align-items: center; position: relative; padding: 10px; }
-nav { margin: 0 auto; }
-.nav-link { color: #fff; text-decoration: none; font-size: 20px; margin: 0 20px; padding: 5px 10px; border-radius: 5px; transition: background-color 0.3s; }
-.nav-link:hover, .nav-link.active { background-color: rgba(255, 255, 255, 0.2); }
-#music-toggle { position: absolute; right: 20px; background: rgba(255, 255, 255, 0.2); border: none; color: white; font-size: 20px; border-radius: 50%; width: 40px; height: 40px; cursor: pointer; transition: background-color 0.3s; }
+
+/* Стили для выпадающего меню навигации */
+header {
+    display: flex;
+    justify-content: space-between; /* Распределяем элементы по краям */
+    align-items: center;
+    position: relative;
+    padding: 10px;
+    margin-bottom: 20px; /* Отступ от шапки до контента */
+}
+
+.dropdown-nav {
+    position: relative;
+    display: inline-block;
+    z-index: 101; /* Поверх всего */
+}
+
+.nav-toggle-btn {
+    background-color: rgba(255, 255, 255, 0.15);
+    color: white;
+    padding: 10px 20px;
+    font-size: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s, box-shadow 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.nav-toggle-btn:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+}
+
+.arrow-down {
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    display: inline-block;
+    padding: 3px;
+    transform: rotate(45deg);
+    transition: transform 0.3s ease;
+}
+
+.dropdown-nav.active .arrow-down {
+    transform: rotate(-135deg); /* Стрелка вверх при открытом меню */
+}
+
+.dropdown-content {
+    display: none; /* Скрыто по умолчанию */
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.8);
+    min-width: 160px;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.4);
+    border-radius: 8px;
+    padding: 12px 0;
+    margin-top: 10px;
+    left: 0; /* Выравнивание по левому краю кнопки */
+    text-align: left;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    animation: fadeInDropdown 0.3s ease-out forwards;
+}
+
+.dropdown-nav.active .dropdown-content {
+    display: block; /* Отображается при активном меню */
+}
+
+@keyframes fadeInDropdown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.dropdown-content .nav-link {
+    color: white;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    font-size: 16px;
+    margin: 0; /* Убираем маргины, которые были у обычных nav-link */
+    border-radius: 0; /* Убираем радиус, чтобы ссылки были прямыми */
+}
+
+.dropdown-content .nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+.dropdown-content .nav-link.active {
+    background-color: rgba(0, 170, 255, 0.3);
+    border-left: 3px solid #00aaff;
+}
+
+
+#music-toggle {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    font-size: 20px;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    flex-shrink: 0; /* Не сжимается */
+}
 #music-toggle:hover { background-color: rgba(255, 255, 255, 0.4); }
+
 .page { display: none; }
 .page.active { display: block; animation: fadeIn 0.8s; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
 .messages-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 30px; }
 .message-card { background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); padding: 20px; border-radius: 10px; backdrop-filter: blur(5px); text-align: left; }
 
-/* --- СТИЛИ ДЛЯ ЧАТА С КОТОМ --- */
-.chat-container { max-width: 700px; margin: 30px auto; border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 10px; background: rgba(0, 0, 0, 0.2); backdrop-filter: blur(5px); }
-#chat-window { height: 60vh; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
-#chat-window::-webkit-scrollbar { width: 8px; }
-#chat-window::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); }
-#chat-window::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.3); border-radius: 4px; }
-.message { display: flex; align-items: flex-end; gap: 10px; max-width: 80%; animation: fadeIn 0.5s; }
-.message-bubble { padding: 10px 15px; border-radius: 15px; line-height: 1.5; }
-.user-message { align-self: flex-end; flex-direction: row-reverse; }
-.user-message .message-bubble { background: #4a69bd; border-bottom-right-radius: 3px; }
-.cat-message { align-self: flex-start; }
-.cat-message .message-bubble { background: #606060; border-bottom-left-radius: 3px; }
-#chat-form { display: flex; padding: 10px; border-top: 1px solid rgba(255, 255, 255, 0.2); }
-#chat-input { flex-grow: 1; border: none; background: transparent; color: white; font-family: 'Comfortaa', cursive; font-size: 16px; padding: 10px; }
-#chat-input:focus { outline: none; }
-#chat-form button { font-family: 'Comfortaa', cursive; font-size: 16px; padding: 10px 20px; border: none; background: #4a69bd; color: white; border-radius: 8px; cursor: pointer; transition: background-color 0.2s; }
-#chat-form button:hover { background: #5d81e0; }
+/* --- СТИЛИ КОТА (с облачком и возможностью перетаскивания) --- */
+#cat-container {
+    position: fixed; /* Позволяет перетаскивать */
+    bottom: 10px;
+    right: 20px;
+    z-index: 100;
+    width: 200px; /* Задаем размер контейнера для кота */
+    height: 150px;
+    cursor: grab; /* Курсор для перетаскивания */
+    display: flex;
+    flex-direction: column; /* Размещаем облачко над котом */
+    align-items: center; /* Центрируем кота и облачко */
+    justify-content: flex-end; /* Кот будет внизу контейнера */
+}
+#cat-container.dragging {
+    cursor: grabbing;
+}
 
-/* --- СТИЛИ КОТА --- */
-#cat-container { position: fixed; bottom: 10px; right: 20px; z-index: 100; width: 200px; height: 150px; }
-#cat { position: absolute; bottom: 0; left: 40px; width: 100px; height: 95px; cursor: pointer; }
+
+#cat {
+    position: relative; /* Относительно cat-container */
+    bottom: 0;
+    width: 100px;
+    height: 95px;
+    cursor: pointer; /* Для мурчания */
+    pointer-events: auto; /* Позволяет кликать по коту, даже если контейнер перетаскивается */
+}
 .cat-body, .cat-head, .ear, .cat-tail { background-color: #000; }
 .cat-body { position: absolute; bottom: 0; width: 100px; height: 50px; border-radius: 50px 50px 20px 20px; z-index: 2; }
 .cat-head { position: absolute; bottom: 35px; left: 20px; width: 60px; height: 60px; border-radius: 50%; z-index: 3; }
@@ -72,3 +179,153 @@ nav { margin: 0 auto; }
 .cat-tail { position: absolute; bottom: 5px; left: 80px; width: 15px; height: 80px; border-radius: 20px; transform-origin: bottom center; animation: tail-wag 3s ease-in-out infinite; z-index: 1; }
 @keyframes tail-wag { 0%, 100% { transform: rotate(-20deg); } 50% { transform: rotate(10deg); } }
 @keyframes blink { 0%, 90%, 100% { transform: scaleY(1); } 95% { transform: scaleY(0.1); } }
+
+/* Облачко с текстом для кота */
+#cat-bubble {
+    position: relative; /* Относительно #cat-container */
+    bottom: 10px; /* Отступ от кота */
+    background: white;
+    color: black;
+    padding: 8px 12px;
+    border-radius: 15px;
+    width: max-content;
+    max-width: 150px; /* Ограничение ширины */
+    text-align: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s, visibility 0.4s, transform 0.4s;
+    font-size: 14px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    /* Хвостик облачка */
+    transform-origin: bottom center; /* Точка трансформации для пузыря */
+    transform: translateY(10px); /* Начальное положение */
+}
+#cat-bubble::after {
+    content: '';
+    position: absolute;
+    bottom: -8px; /* Выходит из нижней части пузыря */
+    left: 50%;
+    transform: translateX(-50%) rotate(45deg);
+    width: 15px;
+    height: 15px;
+    background: white;
+    border-radius: 3px;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+}
+#cat-bubble.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0); /* Анимация появления */
+}
+
+
+/* --- Стили для Новеллы --- */
+#novel {
+    text-align: left;
+}
+
+.novel-content {
+    background: rgba(0, 0, 0, 0.4);
+    padding: 30px;
+    border-radius: 10px;
+    margin-top: 30px;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: 0 0 20px rgba(0, 170, 255, 0.2);
+    backdrop-filter: blur(5px);
+}
+
+.chapter {
+    display: none;
+    animation: fadeIn 0.8s;
+}
+
+.chapter.active-chapter {
+    display: block;
+}
+
+.chapter h3 {
+    color: #aaccff;
+    font-size: 1.8em;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.chapter p {
+    line-height: 1.8;
+    margin-bottom: 1em;
+    font-size: 1.1em;
+}
+
+.novel-navigation {
+    margin-top: 30px;
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.novel-navigation button {
+    background-color: rgba(0, 170, 255, 0.2);
+    border: 1px solid #00aaff;
+    color: #fff;
+    padding: 12px 25px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s, box-shadow 0.3s;
+    flex-grow: 1;
+    max-width: 48%;
+}
+
+.novel-navigation button:hover {
+    background-color: rgba(0, 170, 255, 0.4);
+    box-shadow: 0 0 15px #00aaff;
+}
+
+.novel-navigation button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: rgba(0, 170, 255, 0.1);
+    box-shadow: none;
+}
+
+/* --- Стили для Секции Расстояния (только текст) --- */
+#distance {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.distance-text-container {
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 10px;
+    padding: 25px;
+    margin-top: 30px;
+    box-shadow: 0 0 25px rgba(0, 170, 255, 0.3);
+    max-width: 90%;
+    text-align: center;
+    backdrop-filter: blur(5px);
+}
+
+.distance-value { /* Изменил с .distance-text на .distance-value */
+    font-size: 1.8em; /* Немного крупнее для акцента */
+    margin-top: 10px; /* Убрал лишний отступ сверху */
+    color: #eef;
+    letter-spacing: 1px;
+    font-weight: bold; /* Сделал жирнее */
+}
+
+.distance-value .highlight {
+    color: #00aaff;
+    text-shadow: 0 0 10px #00aaff; /* Усилил тень */
+}
+
+.map-message {
+    font-size: 1.2em;
+    color: rgba(238, 238, 255, 0.8);
+    margin-top: 15px;
+    line-height: 1.5;
+}
