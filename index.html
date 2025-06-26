@@ -8,9 +8,6 @@
 </head>
 <body>
     <div id="sky-gradient"></div>
-    <div class="stars"></div>
-    <div class="twinkling"></div>
-    <div class="nebula"></div>
     <div id="orbit-container">
         <div class="sun"></div>
         <div class="moon"></div>
@@ -24,6 +21,7 @@
                     <a href="#home" class="nav-link active">Главная</a>
                     <a href="#messages" class="nav-link">Письма</a>
                     <a href="#novella" class="nav-link">Новелла</a>
+                    <a href="#starmap" class="nav-link">Созвездия</a>
                 </nav>
             </div>
             <button id="music-toggle" title="Включить/выключить музыку">🎵</button>
@@ -54,11 +52,11 @@
                         <h3>Письмо 4: Ты — мой свет</h3>
                         <p>Даже на расстоянии ты умудряешься делать меня счастливее. Твои сообщения, твой голос... всё это как лучик света в самом обычном дне. Ты — моя личная магия.</p>
                     </div>
-                     <div class="message-card">
+                    <div class="message-card">
                         <h3>Письмо 5: Просто так</h3>
                         <p>Это письмо без особого повода. Просто захотелось еще раз напомнить, как много ты для меня значишь. Иногда самые важные вещи хочется говорить просто так, в тишине обычного дня.</p>
                     </div>
-                     <div class="message-card">
+                    <div class="message-card">
                         <h3>Письмо 6: Наша вселенная</h3>
                         <p>Этот маленький сайт — отражение нашего мира. Маленького, уютного, только для нас двоих. Пусть он напоминает тебе, что даже если нас разделяют галактики, наши души всегда рядом.</p>
                     </div>
@@ -78,7 +76,26 @@
                     </p>
                 </div>
             </section>
+            
+            <section id="starmap" class="page">
+                 <div class="stars"></div>
+                 <div class="twinkling"></div>
+                 <div class="nebula"></div>
+                 <h2>Наше созвездие</h2>
+                 <p>Нажми на каждую звезду, чтобы прочитать воспоминание. Соедини их все, чтобы открыть тайное письмо.</p>
+                 <div id="constellation-container">
+                     <svg id="constellation-svg" viewbox="0 0 800 500"></svg>
+                 </div>
+            </section>
+
         </main>
+    </div>
+    
+    <div id="note-modal" class="modal-hidden">
+        <div class="modal-content">
+            <button id="modal-close-button">&times;</button>
+            <p id="modal-text"></p>
+        </div>
     </div>
 
     <div id="cat-container">
@@ -95,7 +112,7 @@
     </div>
 
     <audio id="background-music" src="music/background-music.mp3" loop></audio>
-    <audio id="purr-sound"src="music/purr.mp3"></audio>
+    <audio id="purr-sound" src="music/purr.mp3"></audio>
 
     <script src="script.js"></script>
 </body>
