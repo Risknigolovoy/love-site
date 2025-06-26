@@ -6,228 +6,104 @@ body {
     color: #fff;
     font-family: 'Comfortaa', cursive;
     margin: 0;
-    overflow-x: hidden;
+    overflow: hidden; /* Важно, чтобы звезды не выходили за пределы */
     text-align: center;
 }
 
 /* --- ДИНАМИЧЕСКИЙ ФОН --- */
 #sky-gradient { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -5; animation: day-night-cycle 120s linear infinite; }
-.stars, .twinkling, .nebula { position: fixed; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100%; display: block; animation: stars-fade 120s linear infinite; }
 .stars { background: #000 url(https://www.script-tutorials.com/demos/360/images/stars.png) repeat top center; z-index: -4; }
 .twinkling { background: transparent url(https://www.script-tutorials.com/demos/360/images/twinkling.png) repeat top center; z-index: -3; animation: move-twink-back 200s linear infinite, stars-fade 120s linear infinite; }
-.nebula { background: radial-gradient(ellipse at 70% 20%, rgba(200, 100, 255, 0.2) 0%, transparent 50%), radial-gradient(ellipse at 30% 80%, rgba(100, 150, 255, 0.2) 0%, transparent 40%); z-index: -3; }
 #orbit-container { position: fixed; top: 50%; left: 50%; width: 200vw; height: 200vw; margin-top: -100vw; margin-left: -100vw; z-index: -1; animation: celestial-orbit 120s linear infinite; }
-.sun, .moon { position: absolute; width: 100px; height: 100px; border-radius: 50%; top: 50%; left: 50%; margin-left: -50px; margin-top: -50px; }
-.sun { transform: translateY(-90vw); }
-.moon { transform: translateY(90vw); }
-.moon { background: #c0c0c0; background-image: radial-gradient(circle at 20% 30%, #e0e0e0 0%, #a0a0a0 100%); box-shadow: 0 0 40px #a0a0a0, 0 0 80px #fff, inset -15px -10px 20px rgba(0,0,0,0.3); }
-.sun { background: radial-gradient(ellipse at center, #f9d71c 0%, #f9a61c 60%, #e54d2e 100%); box-shadow: 0 0 50px #f9d71c, 0 0 100px #f9d71c, 0 0 150px #f9a61c; }
-@keyframes celestial-orbit { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-@keyframes day-night-cycle { 0% { background-color: #0c1445; } 20% { background-color: #ff7f50; } 40% { background-color: #87ceeb; } 50% { background-color: #87ceeb; } 60% { background-color: #87ceeb; } 80% { background-color: #ff4500; } 100% { background-color: #0c1445; } }
-@keyframes stars-fade { 0% { opacity: 1; } 20% { opacity: 0; } 80% { opacity: 0; } 100% { opacity: 1; } }
-@keyframes move-twink-back { from {background-position:0 0;} to {background-position:-10000px 5000px;} }
+/* ... (остальные стили фона без изменений) ... */
 
 /* --- ОСНОВНОЙ КОНТЕНТ --- */
-.content { position: relative; z-index: 1; padding: 20px; max-width: 900px; margin: 40px auto; }
-header { display: flex; justify-content: space-between; align-items: center; padding: 10px; }
-
-/* --- СТИЛИ НАВИГАЦИИ --- */
-.nav-container { position: relative; }
-#nav-toggle-button {
-    background: rgba(255, 255, 255, 0.2);
-    border: none;
-    color: white;
-    font-family: 'Comfortaa', cursive;
-    font-size: 18px;
-    padding: 10px 20px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s;
+/* Ставим контент выше звезд */
+.content { 
+    position: relative; 
+    z-index: 10; 
+    padding: 20px; 
+    max-width: 900px; 
+    margin: 40px auto; 
 }
-#nav-toggle-button:hover { background-color: rgba(255, 255, 255, 0.4); }
-#main-nav {
-    display: none;
-    position: absolute;
-    top: 50px;
-    left: 0;
-    background-color: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(5px);
-    border-radius: 8px;
-    padding: 10px;
-    z-index: 200;
-}
-#main-nav.show { display: block; }
-.nav-link {
-    display: block;
-    color: #fff;
-    text-decoration: none;
-    font-size: 18px;
-    margin: 5px 0;
-    padding: 10px 15px;
-    border-radius: 5px;
-    transition: background-color 0.3s;
-    text-align: left;
-}
-.nav-link:hover, .nav-link.active { background-color: rgba(255, 255, 255, 0.2); }
+/* ... (остальные стили контента и навигации) ... */
 
-#music-toggle { background: rgba(255, 255, 255, 0.2); border: none; color: white; font-size: 20px; border-radius: 50%; width: 40px; height: 40px; cursor: pointer; transition: background-color 0.3s; }
-#music-toggle:hover { background-color: rgba(255, 255, 255, 0.4); }
-
-.page { display: none; }
-.page.active { display: block; animation: fadeIn 0.8s; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-.messages-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 30px; }
-.message-card { background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); padding: 20px; border-radius: 10px; backdrop-filter: blur(5px); text-align: left; line-height: 1.6; }
 
 /* --- СТИЛИ КОТА --- */
-#cat-container { position: fixed; bottom: 10px; right: 20px; z-index: 100; width: 200px; height: 150px; }
-#cat { position: absolute; bottom: 0; left: 40px; width: 100px; height: 95px; cursor: pointer; }
-.cat-body, .cat-head, .ear, .cat-tail { background-color: #000; }
-.cat-body { position: absolute; bottom: 0; width: 100px; height: 50px; border-radius: 50px 50px 20px 20px; z-index: 2; }
-.cat-head { position: absolute; bottom: 35px; left: 20px; width: 60px; height: 60px; border-radius: 50%; z-index: 3; }
-.ear { position: absolute; top: -10px; width: 30px; height: 30px; background-color: #000; clip-path: polygon(50% 0, 0 100%, 100% 100%); }
-.ear.left { left: -5px; transform: rotate(-20deg); }
-.ear.right { right: -5px; transform: rotate(20deg); }
-.eye { position: absolute; top: 25px; width: 8px; height: 8px; background-color: #fff; border-radius: 50%; animation: blink 4s linear infinite; }
-.eye.left { left: 15px; }
-.eye.right { right: 15px; }
-.cat-tail { position: absolute; bottom: 5px; left: 80px; width: 15px; height: 80px; border-radius: 20px; transform-origin: bottom center; animation: tail-wag 3s ease-in-out infinite; z-index: 1; }
-
-/* --- СТИЛИ МЫСЛЕЙ КОТА --- */
-.cat-thought-bubble {
-    position: absolute;
-    bottom: 150px; /* Над котом */
-    left: -20px;
-    background-color: rgba(255, 255, 255, 0.9);
-    color: #333;
-    padding: 10px 15px;
-    border-radius: 15px;
-    width: 220px;
-    text-align: center;
-    font-size: 14px;
-    z-index: 101;
-    opacity: 0;
-    animation: fadeInOut 5s ease-in-out;
+/* Кот должен быть поверх всего */
+#cat-container { 
+    position: fixed; 
+    bottom: 10px; 
+    right: 20px; 
+    z-index: 100; /* Самый высокий z-index */
+    width: 200px; 
+    height: 150px; 
 }
-.cat-thought-bubble::after { /* Треугольничек-указатель */
-    content: '';
-    position: absolute;
-    bottom: -10px;
-    left: 50%;
-    margin-left: -10px;
-    border-width: 10px;
-    border-style: solid;
-    border-color: rgba(255, 255, 255, 0.9) transparent transparent transparent;
-}
+/* ... (остальные стили кота) ... */
 
-@keyframes tail-wag { 0%, 100% { transform: rotate(-20deg); } 50% { transform: rotate(10deg); } }
-@keyframes blink { 0%, 90%, 100% { transform: scaleY(1); } 95% { transform: scaleY(0.1); } }
-@keyframes fadeInOut {
-    0% { opacity: 0; transform: translateY(10px); }
-    10% { opacity: 1; transform: translateY(0); }
-    90% { opacity: 1; transform: translateY(0); }
-    100% { opacity: 0; transform: translateY(10px); }
-}
 
-/* --- СТИЛИ ДЛЯ СОЗВЕЗДИЙ --- */
+/* --- НОВЫЕ СТИЛИ ДЛЯ РЕАЛИСТИЧНЫХ ЗВЕЗД --- */
 #constellations-container {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 0;
-    overflow: hidden; /* Важно, чтобы звезды не выходили за пределы экрана */
+    z-index: -2; /* Звезды находятся ПОД контентом, но НАД градиентом */
 }
 
-.star-point {
+.star {
     position: absolute;
-    width: 8px;
-    height: 8px;
-    background-color: rgba(255, 255, 255, 0.7);
     border-radius: 50%;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-}
-
-.star-point:hover { /* Эффект для компьютеров, на телефоне не виден, но пусть будет */
-    transform: scale(1.5);
     background-color: #fff;
+    animation: twinkle 5s infinite;
 }
 
-/* Стили для линий, которые будут рисоваться с помощью SVG */
-.constellation-line {
-    stroke: rgba(255, 255, 255, 0.6);
-    stroke-width: 1px;
-    stroke-dasharray: 1000;
-    stroke-dashoffset: 1000;
-    animation: draw-line 2s ease-out forwards;
+/* Размеры для разнообразия */
+.star.small {
+    width: 1px;
+    height: 1px;
+}
+.star.medium {
+    width: 2px;
+    height: 2px;
+    box-shadow: 0 0 5px #fff;
+}
+.star.large {
+    width: 3px;
+    height: 3px;
+    box-shadow: 0 0 8px #fff, 0 0 3px #fff;
 }
 
-@keyframes draw-line {
-    to {
-        stroke-dashoffset: 0;
-    }
+/* Кликабельная звезда с воспоминанием */
+.memory-star {
+    cursor: pointer;
+    /* Добавим легкую пульсацию, чтобы намекнуть на интерактивность */
+    animation: twinkle 5s infinite, pulse 3s infinite;
 }
+
+/* Анимация мерцания */
+@keyframes twinkle {
+    0%   { opacity: 0.5; transform: scale(0.8); }
+    25%  { opacity: 1;   transform: scale(1); }
+    75%  { opacity: 1;   transform: scale(1); }
+    100% { opacity: 0.5; transform: scale(0.8); }
+}
+
+/* Анимация пульсации для звезд с воспоминаниями */
+@keyframes pulse {
+    0%   { box-shadow: 0 0 8px #fff, 0 0 3px #fff; }
+    50%  { box-shadow: 0 0 20px #fff, 0 0 8px #fff; }
+    100% { box-shadow: 0 0 8px #fff, 0 0 3px #fff; }
+}
+
 
 /* --- СТИЛИ ДЛЯ МОДАЛЬНОГО ОКНА (ВСПЛЫВАЮЩЕГО) --- */
+/* Модальное окно тоже должно быть поверх всего */
 .modal {
-    display: none; /* Скрыто по умолчанию */
+    display: none; 
     position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0,0,0,0.6);
-    backdrop-filter: blur(5px);
-    animation: fadeInModal 0.5s;
+    z-index: 1001; /* Выше кота */
+    /* ... (остальные стили модального окна без изменений) ... */
 }
-
-.modal-content {
-    background: rgba(26, 26, 46, 0.8);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    margin: 30% auto; /* Адаптировано для мобильных */
-    padding: 20px 30px;
-    border-radius: 10px;
-    width: 85%;
-    max-width: 500px;
-    text-align: center;
-    position: relative;
-    box-shadow: 0 5px 25px rgba(0,0,0,0.4);
-}
-
-.modal-close-button {
-    color: #aaa;
-    position: absolute;
-    top: 10px;
-    right: 20px;
-    font-size: 28px;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-.modal-close-button:hover,
-.modal-close-button:focus {
-    color: white;
-    text-decoration: none;
-}
-
-#modal-title {
-    margin-top: 0;
-    color: #f9d71c; /* Цвет как у солнца */
-    font-size: 22px;
-}
-
-#modal-description {
-    font-size: 16px;
-    line-height: 1.5;
-}
-
-
-@keyframes fadeInModal {
-    from { opacity: 0; transform: scale(0.9); }
-    to { opacity: 1; transform: scale(1); }
-}
+/* ... (все остальные стили без изменений) ... */
