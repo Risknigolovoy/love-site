@@ -8,13 +8,10 @@
 </head>
 <body>
     <div id="sky-gradient"></div>
-
-    <div id="celestial-bodies-container">
-        <div id="orbit-container">
-            <div class="sun"></div>
-            <div class="moon"></div>
-            <div id="created-planet-orbit"></div>
-        </div>
+    <div id="orbit-container">
+        <div class="sun"></div>
+        <div class="moon"></div>
+        <div id="created-planet-orbit"></div>
     </div>
 
     <div class="content">
@@ -41,13 +38,21 @@
             <section id="messages" class="page">
                 <h2>Мои письма к тебе</h2>
                 <div class="messages-grid">
-                    </div>
+                    <div class="message-card"><h3>Письмо 1: Мысли о тебе</h3><p>Я очень скучаю по тебе. Каждая минута без тебя тянется, как вечность. Но мысль о нашей встрече согревает меня и дает силы двигаться вперед. Закрываю глаза и представляю твою улыбку.</p></div>
+                    <div class="message-card"><h3>Письмо 2: Скоро будем вместе</h3><p>Я считаю дни, часы и минуты до момента, когда мы снова будем рядом. Это время пролетит, и все ожидания окупятся сторицей. Обещаю, разлука лишь укрепит наши чувства.</p></div>
+                    <div class="message-card"><h3>Письмо 3: Три главных слова</h3><p>Я люблю тебя. Три простых слова, но в них вся моя жизнь, все мои надежды и мечты. Ты — мое вдохновение, моя радость и моя самая главная поддержка. Спасибо, что ты есть.</p></div>
+                    <div class="message-card"><h3>Письмо 4: Ты — мой свет</h3><p>Даже на расстоянии ты умудряешься делать меня счастливее. Твои сообщения, твой голос... всё это как лучик света в самом обычном дне. Ты — моя личная магия.</p></div>
+                    <div class="message-card"><h3>Письмо 5: Просто так</h3><p>Это письмо без особого повода. Просто захотелось еще раз напомнить, как много ты для меня значишь. Иногда самые важные вещи хочется говорить просто так, в тишине обычного дня.</p></div>
+                    <div class="message-card"><h3>Письмо 6: Наша вселенная</h3><p>Этот маленький сайт — отражение нашего мира. Маленького, уютного, только для нас двоих. Пусть он напоминает тебе, что даже если нас разделяют галактики, наши души всегда рядом.</p></div>
+                </div>
             </section>
 
             <section id="novella" class="page">
                 <h2>Новелла о нас</h2>
                 <div class="message-card">
-                    </div>
+                    <h3>Глава 1: Два города, одна душа</h3>
+                    <p>Холодный свет экрана освещал лицо Марии... (и так далее)</p>
+                </div>
             </section>
             
             <section id="starmap" class="page">
@@ -67,42 +72,14 @@
                 <p>Создай здесь наш собственный мир, и он появится в нашей вселенной.</p>
                 <div class="creator-layout">
                     <div class="planet-preview-container">
-                        <div id="planet-preview">
-                            <div class="preview-ocean"></div>
-                            <div class="preview-continent" id="continent1"></div>
-                            <div class="preview-continent" id="continent2"></div>
-                            <div class="preview-continent" id="continent3"></div>
-                            <div class="preview-clouds"></div>
-                            <div class="preview-rings"></div>
-                        </div>
+                        <div id="planet-preview"></div>
                     </div>
                     <div class="planet-controls">
-                        <div class="control-group">
-                            <label for="planet-name">Имя планеты:</label>
-                            <input type="text" id="planet-name" placeholder="Например, Элизиум">
-                        </div>
-                        <div class="control-group">
-                            <label for="ocean-color">Цвет океанов:</label>
-                            <input type="color" id="ocean-color" value="#4a90e2">
-                        </div>
-                        <div class="control-group">
-                            <label for="continent-color">Цвет материков:</label>
-                            <input type="color" id="continent-color" value="#8bc34a">
-                        </div>
-                        <div class="control-group">
-                             <label class="toggle-label">
-                                <span>Облака:</span>
-                                <input type="checkbox" id="cloud-toggle" class="toggle-switch">
-                            </label>
-                            <label for="cloud-color">Цвет облаков:</label>
-                            <input type="color" id="cloud-color" value="#ffffff">
-                        </div>
-                         <div class="control-group">
-                             <label class="toggle-label">
-                                <span>Кольца:</span>
-                                <input type="checkbox" id="rings-toggle" class="toggle-switch">
-                            </label>
-                        </div>
+                        <div class="control-group"><label for="planet-name">Имя планеты:</label><input type="text" id="planet-name" placeholder="Например, Элизиум"></div>
+                        <div class="control-group"><label for="ocean-color">Цвет океанов:</label><input type="color" id="ocean-color" value="#4a90e2"></div>
+                        <div class="control-group"><label for="continent-color">Цвет материков:</label><input type="color" id="continent-color" value="#8bc34a"></div>
+                        <div class="control-group"><label class="toggle-label"><span>Облака:</span><input type="checkbox" id="cloud-toggle"><span class="toggle-switch"></span></label></div>
+                        <div class="control-group"><label class="toggle-label"><span>Кольца:</span><input type="checkbox" id="rings-toggle"><span class="toggle-switch"></span></label></div>
                         <button id="save-planet-button">Сохранить планету</button>
                     </div>
                 </div>
@@ -119,7 +96,10 @@
     </div>
 
     <div id="cat-container">
+        <div id="cat">
+            <div class="cat-tail"></div><div class="cat-body"></div><div class="cat-head"><div class="ear left"></div><div class="ear right"></div><div class="eye left"></div><div class="eye right"></div></div>
         </div>
+    </div>
 
     <audio id="background-music" src="music/background-music.mp3" loop></audio>
     <audio id="purr-sound" src="music/purr.mp3"></audio>
