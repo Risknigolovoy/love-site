@@ -3,178 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Наше место ♡</title>
-    <style>
-        /* Стили для приятного внешнего вида */
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background-color: #f0f2f5;
-            color: #333;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-        }
-        .container {
-            width: 100%;
-            max-width: 800px;
-            background-color: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            padding: 30px;
-        }
-        h1 {
-            text-align: center;
-            color: #e85a71; /* Розовый акцентный цвет */
-        }
-        .notes-section {
-            margin-top: 20px;
-        }
-        textarea {
-            width: 100%;
-            height: 200px;
-            border-radius: 8px;
-            border: 1px solid #ddd;
-            padding: 15px;
-            font-size: 16px;
-            box-sizing: border-box; /* Чтобы padding не влиял на ширину */
-            resize: vertical; /* Разрешаем менять высоту */
-        }
-        .button-container {
-            text-align: center;
-            margin-top: 15px;
-        }
-        button {
-            background-color: #e85a71;
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 8px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        button:hover {
-            background-color: #d14f63;
-        }
-        /* Стили для всплывающего окна */
-        .popup-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.6);
-            display: none; /* Изначально скрыто */
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-        .popup-content {
-            background-color: white;
-            padding: 40px;
-            border-radius: 12px;
-            text-align: center;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            max-width: 90%;
-            font-size: 22px;
-            color: #333;
-            position: relative;
-        }
-        .popup-close {
-            position: absolute;
-            top: 10px;
-            right: 15px;
-            font-size: 28px;
-            color: #aaa;
-            cursor: pointer;
-        }
-    </style>
+    <title>Для тебя ❤️</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div id="sky-gradient"></div>
+    <div class="stars"></div>
+    <div class="twinkling"></div>
+    <div class="nebula"></div>
+    <div id="orbit-container">
+        <div class="sun"></div>
+        <div class="moon"></div>
+    </div>
 
-    <div class="container">
-        <h1>Наши записки</h1>
-        <div class="notes-section">
-            <textarea id="notes-input" placeholder="Напиши что-нибудь здесь..."></textarea>
-            <div class="button-container">
-                <button onclick="saveNotes()">Сохранить</button>
+    <div class="content">
+        <header>
+            <nav>
+                <a href="#home" class="nav-link active">Главная</a>
+                <a href="#messages" class="nav-link">Письма</a>
+                <a href="#chat" class="nav-link">Чат с котом</a>
+            </nav>
+            <button id="music-toggle" title="Включить/выключить музыку">🎵</button>
+        </header>
+
+        <main>
+            <section id="home" class="page active">
+                <h1>Привет, моя вселенная!</h1>
+                <p>Этот маленький мир я создал только для тебя. Здесь ты можешь найти мои мысли и почувствовать, что я рядом, даже если нас разделяют километры.</p>
+            </section>
+
+            <section id="messages" class="page">
+                <h2>Мои письма к тебе</h2>
+                <div class="messages-grid">
+                    <div class="message-card">
+                        <h3>Письмо 1: Мысли о тебе</h3>
+                        <p>Я очень скучаю по тебе. Каждая минута без тебя тянется, как вечность. Но мысль о нашей встрече согревает меня и дает силы двигаться вперед. Закрываю глаза и представляю твою улыбку.</p>
+                    </div>
+                    <div class="message-card">
+                        <h3>Письмо 2: Скоро будем вместе</h3>
+                        <p>Я считаю дни, часы и минуты до момента, когда мы снова будем рядом. Это время пролетит, и все ожидания окупятся сторицей. Обещаю, разлука лишь укрепит наши чувства.</p>
+                    </div>
+                    <div class="message-card">
+                        <h3>Письмо 3: Три главных слова</h3>
+                        <p>Я люблю тебя. Три простых слова, но в них вся моя жизнь, все мои надежды и мечты. Ты — мое вдохновение, моя радость и моя самая главная поддержка. Спасибо, что ты есть.</p>
+                    </div>
+                    <div class="message-card">
+                        <h3>Письмо 4: Ты — мой свет</h3>
+                        <p>Даже на расстоянии ты умудряешься делать меня счастливее. Твои сообщения, твой голос... всё это как лучик света в самом обычном дне. Ты — моя личная магия.</p>
+                    </div>
+                     <div class="message-card">
+                        <h3>Письмо 5: Просто так</h3>
+                        <p>Это письмо без особого повода. Просто захотелось еще раз напомнить, как много ты для меня значишь. Иногда самые важные вещи хочется говорить просто так, в тишине обычного дня.</p>
+                    </div>
+                     <div class="message-card">
+                        <h3>Письмо 6: Наша вселенная</h3>
+                        <p>Этот маленький сайт — отражение нашего мира. Маленького, уютного, только для нас двоих. Пусть он напоминает тебе, что даже если нас разделяют галактики, наши души всегда рядом.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="chat" class="page">
+                <h2>Поговори со мной</h2>
+                <div class="chat-container">
+                    <div id="chat-window">
+                        </div>
+                    <form id="chat-form">
+                        <input type="text" id="chat-input" placeholder="Напиши что-нибудь..." autocomplete="off">
+                        <button type="submit">Мяу</button>
+                    </form>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div id="cat-container">
+        <div id="cat">
+            <div class="cat-tail"></div>
+            <div class="cat-body"></div>
+            <div class="cat-head">
+                <div class="ear left"></div>
+                <div class="ear right"></div>
+                <div class="eye left"></div>
+                <div class="eye right"></div>
             </div>
         </div>
     </div>
 
-    <div class="popup-overlay" id="daily-popup">
-        <div class="popup-content">
-            <span class="popup-close" onclick="closePopup()">&times;</span>
-            <p id="popup-phrase"></p>
-        </div>
-    </div>
+    <audio id="background-music" src="music/background-music.mp3" loop></audio>
+    <audio id="purr-sound" src="music/purr.mp3"></audio>
 
-    <script>
-        // --- СПИСОК ФРАЗ ---
-        // Ты можешь добавить сюда сколько угодно своих фраз
-        const phrases = [
-            "Я рядом.",
-            "Ты прекрасно выглядишь, даже когда я не вижу.",
-            "Жопка моя ❤️",
-            "Думаю о тебе.",
-            "Пусть твой день будет таким же замечательным, как и ты!",
-            "Улыбнись, тебе очень идет."
-        ];
-
-        // --- ЛОГИКА ДЛЯ ЗАПИСОК ---
-        const notesInput = document.getElementById('notes-input');
-
-        // Функция сохранения текста
-        function saveNotes() {
-            const textToSave = notesInput.value;
-            localStorage.setItem('our_notes', textToSave);
-            alert('Сохранено!'); // Маленькое уведомление о сохранении
-        }
-
-        // Функция загрузки текста при открытии страницы
-        function loadNotes() {
-            const savedText = localStorage.getItem('our_notes');
-            if (savedText) {
-                notesInput.value = savedText;
-            }
-        }
-
-        // --- ЛОГИКА ДЛЯ ВСЛПЫВАЮЩЕГО ОКНА ---
-        const popup = document.getElementById('daily-popup');
-        const popupPhrase = document.getElementById('popup-phrase');
-
-        function showPopup() {
-            // Выбираем случайную фразу
-            const randomIndex = Math.floor(Math.random() * phrases.length);
-            popupPhrase.textContent = phrases[randomIndex];
-            popup.style.display = 'flex';
-        }
-
-        function closePopup() {
-            popup.style.display = 'none';
-        }
-
-        // Проверяем, нужно ли показывать окно сегодня
-        function checkDailyPopup() {
-            const today = new Date().toDateString(); // Получаем сегодняшнюю дату в формате "Thu Jun 26 2025"
-            const lastShownDate = localStorage.getItem('last_popup_date');
-
-            if (lastShownDate !== today) {
-                // Если сегодня еще не показывали, показываем и сохраняем дату
-                showPopup();
-                localStorage.setItem('last_popup_date', today);
-            }
-        }
-
-        // --- ЗАПУСК ВСЕГО ПРИ ЗАГРУЗКЕ СТРАНИЦЫ ---
-        window.onload = function() {
-            loadNotes();
-            checkDailyPopup();
-        };
-
-    </script>
-
+    <script src="script.js"></script>
 </body>
 </html>
