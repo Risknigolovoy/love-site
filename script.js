@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Элементы новой навигации
     const navToggleBtn = document.getElementById('nav-toggle-btn');
+    const dropdownNav = document.querySelector('.dropdown-nav'); // Получаем сам dropdown-nav
     const dropdownNavContent = document.getElementById('dropdown-nav-content');
     const navLinks = dropdownNavContent.querySelectorAll('.nav-link'); // Теперь ссылки внутри dropdown
     const pages = document.querySelectorAll('.page'); // Страницы остаются такими же
@@ -59,15 +60,16 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- ОБРАБОТЧИКИ СОБЫТИЙ ---
 
     // Переключение выпадающего меню навигации
-    if (navToggleBtn) {
-        navToggleBtn.addEventListener('click', () => {
-            dropdownNavContent.parentElement.classList.toggle('active');
+    if (navToggleBtn && dropdownNav) { // Проверяем наличие обоих элементов
+        navToggleBtn.addEventListener('click', (e) => {
+            e.stopPropagation(); // Предотвращаем всплытие события, чтобы не закрывалось сразу
+            dropdownNav.classList.toggle('active');
         });
 
         // Закрываем меню при клике вне его
         document.addEventListener('click', (event) => {
-            if (!navToggleBtn.contains(event.target) && !dropdownNavContent.contains(event.target)) {
-                dropdownNavContent.parentElement.classList.remove('active');
+            if (dropdownNav && !dropdownNav.contains(event.target)) {
+                dropdownNav.classList.remove('active');
             }
         });
     }
@@ -89,7 +91,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             
             // Закрываем выпадающее меню после выбора
-            dropdownNavContent.parentElement.classList.remove('active');
+            if (dropdownNav) {
+                dropdownNav.classList.remove('active');
+            }
 
             // Логика для новеллы при переключении на ее вкладку
             if (targetId === '#novel') {
@@ -104,7 +108,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Обработчик для мурчания кота
     if (cat) {
-        cat.addEventListener('click', () => {
+        cat.addEventListener('click', (e) => {
+            e.stopPropagation(); // Предотвращаем всплытие, чтобы не конфликтовать с перетаскиванием
             if (!purrSound.paused) { 
                 purrSound.pause();
                 purrSound.currentTime = 0; // Сбрасываем, чтобы начинать с начала
@@ -113,7 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             // Показываем случайную фразу по клику, если уже не показывает
-            if (!catBubble.classList.contains('show')) {
+            if (catBubble && !catBubble.classList.contains('show')) {
                 displayCatPhrase();
             }
         });
@@ -121,6 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Функция для отображения случайной фразы кота
     function displayCatPhrase() {
+        if (!catBubble) return; // Проверяем, что облачко существует
         const randomIndex = Math.floor(Math.random() * catPhrases.length);
         catBubble.textContent = catPhrases[randomIndex];
         catBubble.classList.add('show');
@@ -135,7 +141,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Очищаем предыдущий интервал, если он был
     if (phraseInterval) clearInterval(phraseInterval);
     phraseInterval = setInterval(() => {
-        if (!catBubble.classList.contains('show')) { // Показываем, только если не активно
+        if (catBubble && !catBubble.classList.contains('show')) { // Показываем, только если не активно
             displayCatPhrase();
         }
     }, Math.random() * (25000 - 15000) + 15000); // Случайное время от 15 до 25 секунд
@@ -212,22 +218,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (catContainer) {
         catContainer.addEventListener('mousedown', (e) => {
-            // Разрешаем перетаскивание только если не кликнули на самого кота (для мурчания)
-            if (e.target.id === 'cat' || e.target.closest('#cat')) {
-                return; // Не начинаем перетаскивание, если клик был по коту
+            // Начинаем перетаскивание, только если клик был по catContainer, но не по самому коту
+            // e.target - это элемент, на котором произошло событие
+            if (e.target === catContainer || !cat.contains(e.target)) {
+                isDragging = true;
+                catContainer.classList.add('dragging');
+                offsetX = e.clientX - catContainer.getBoundingClientRect().left;
+                offsetY = e.clientY - catContainer.getBoundingClientRect().top;
+                e.preventDefault(); // Предотвращаем стандартное поведение браузера (например, выделение текста)
             }
-            isDragging = true;
-            catContainer.classList.add('dragging');
-
-            // Рассчитываем смещение курсора относительно верхнего левого угла контейнера
-            offsetX = e.clientX - catContainer.getBoundingClientRect().left;
-            offsetY = e.clientY - catContainer.getBoundingClientRect().top;
         });
 
         document.addEventListener('mousemove', (e) => {
             if (!isDragging) return;
 
-            // Вычисляем новые координаты, чтобы контейнер следовал за курсором
             let newX = e.clientX - offsetX;
             let newY = e.clientY - offsetY;
 
@@ -270,16 +274,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Для сенсорных устройств (мобильных)
         catContainer.addEventListener('touchstart', (e) => {
-            // Разрешаем перетаскивание только если не кликнули на самого кота (для мурчания)
-            if (e.target.id === 'cat' || e.target.closest('#cat')) {
-                return;
+            if (e.target === catContainer || !cat.contains(e.target)) {
+                isDragging = true;
+                catContainer.classList.add('dragging');
+                const touch = e.touches[0];
+                offsetX = touch.clientX - catContainer.getBoundingClientRect().left;
+                offsetY = touch.clientY - catContainer.getBoundingClientRect().top;
+                e.preventDefault(); // Предотвращаем прокрутку страницы при касании
             }
-            isDragging = true;
-            catContainer.classList.add('dragging');
-            const touch = e.touches[0];
-            offsetX = touch.clientX - catContainer.getBoundingClientRect().left;
-            offsetY = touch.clientY - catContainer.getBoundingClientRect().top;
-            e.preventDefault(); // Предотвращаем прокрутку страницы при касании
         });
 
         document.addEventListener('touchmove', (e) => {
