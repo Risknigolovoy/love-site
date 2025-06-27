@@ -16,7 +16,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const pages = document.querySelectorAll('.page');
         navToggleButton.addEventListener('click', () => mainNav.classList.toggle('show'));
         document.addEventListener('click', (e) => {
-            if (!mainNav.contains(e.target) && !navToggleButton.contains(e.target)) mainNav.classList.remove('show');
+            if (mainNav && navToggleButton && !mainNav.contains(e.target) && !navToggleButton.contains(e.target)) {
+                mainNav.classList.remove('show');
+            }
         });
         navLinks.forEach(link => {
             link.addEventListener('click', (e) => {
@@ -34,15 +36,16 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- МОДУЛЬ КОТА (С ПЕРЕТАСКИВАНИЕМ) ---
     function setupCat() {
         const catContainer = document.getElementById('cat-container');
-        const cat = document.getElementById('cat');
         const purrSound = document.getElementById('purr-sound');
         purrSound.volume = 1.0;
         const catThoughts = ['Привет! Меня зовут Soul.', 'Мррр... Я так голоден!', 'Погладь меня, пожалуйста...', 'Рад тебя видеть, хозяйка!', 'Мур-мур-мур...', 'Интересно, о чем ты думаешь?'];
         
         let isDragging = false;
+        let isClick = true;
         let offsetX, offsetY;
 
         const startDrag = (e) => {
+            isClick = true;
             isDragging = true;
             catContainer.classList.add('dragging');
             const clientX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
@@ -57,18 +60,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const onDrag = (e) => {
             if (!isDragging) return;
+            isClick = false; // Если было движение, это не клик
             e.preventDefault();
             const clientX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
             const clientY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
             let newLeft = clientX - offsetX;
             let newTop = clientY - offsetY;
-
-            // Ограничения, чтобы кот не ушел за экран
             const maxX = window.innerWidth - catContainer.offsetWidth;
             const maxY = window.innerHeight - catContainer.offsetHeight;
             newLeft = Math.max(0, Math.min(newLeft, maxX));
             newTop = Math.max(0, Math.min(newTop, maxY));
-            
             catContainer.style.left = `${newLeft}px`;
             catContainer.style.top = `${newTop}px`;
         };
@@ -80,26 +81,53 @@ document.addEventListener('DOMContentLoaded', () => {
             document.removeEventListener('mouseup', endDrag);
             document.removeEventListener('touchmove', onDrag);
             document.removeEventListener('touchend', endDrag);
+            // Обработка клика
+            setTimeout(() => {
+                if (isClick) {
+                    showCatThought();
+                    if (!purrSound.paused) { purrSound.pause(); purrSound.currentTime = 0; }
+                    else { purrSound.play(); }
+                }
+            }, 0);
         };
-
+        
         catContainer.addEventListener('mousedown', startDrag);
         catContainer.addEventListener('touchstart', startDrag);
         
-        function showCatThought() { /* ... */ }
-        cat.addEventListener('click', (e) => {
-            // Предотвращаем начало перетаскивания, если это был быстрый клик
-            if (Math.abs(e.clientX - (offsetX + catContainer.offsetLeft)) < 5) {
-                showCatThought();
-                if (!purrSound.paused) { purrSound.pause(); purrSound.currentTime = 0; }
-                else { purrSound.play(); }
-            }
-        }, true);
+        function showCatThought() {
+            const existingBubble = document.querySelector('.cat-thought-bubble');
+            if (existingBubble) existingBubble.remove();
+            const thoughtBubble = document.createElement('div');
+            thoughtBubble.classList.add('cat-thought-bubble');
+            thoughtBubble.textContent = catThoughts[Math.floor(Math.random() * catThoughts.length)];
+            catContainer.appendChild(thoughtBubble);
+            setTimeout(() => thoughtBubble.remove(), 5000);
+        }
     }
 
     // --- МОДУЛЬ МУЗЫКИ ---
-    function setupMusic() { /* ... код без изменений ... */ }
+    function setupMusic() {
+        const backgroundMusic = document.getElementById('background-music');
+        const musicToggleButton = document.getElementById('music-toggle');
+        backgroundMusic.volume = 0.15;
+        
+        musicToggleButton.addEventListener('click', () => {
+            if (backgroundMusic.paused) { backgroundMusic.play().catch(e=>console.log("Play failed")); musicToggleButton.textContent = '🎵'; }
+            else { backgroundMusic.pause(); musicToggleButton.textContent = '🔇'; }
+        });
+
+        let musicStarted = false;
+        function playMusicOnClick() {
+            if (!musicStarted) {
+                backgroundMusic.play().then(() => { musicStarted = true; musicToggleButton.textContent = '🎵'; })
+                .catch(() => musicToggleButton.textContent = '🔇');
+            }
+            document.body.removeEventListener('click', playMusicOnClick);
+        }
+        document.body.addEventListener('click', playMusicOnClick);
+    }
     
-    // --- МОДУЛЬ МОДАЛЬНОГО ОКНА (С ИСПРАВЛЕНИЕМ) ---
+    // --- МОДУЛЬ МОДАЛЬНОГО ОКНА ---
     function setupModal() {
         const modal = document.getElementById('note-modal');
         const modalText = document.getElementById('modal-text');
@@ -107,7 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         window.showNote = (text, isSecret = false) => {
             modalText.innerHTML = text;
-            modalText.parentElement.scrollTop = 0; // Сбрасываем скролл наверх
+            modalText.parentElement.scrollTop = 0;
             modalText.classList.toggle('align-left', isSecret);
             modal.classList.add('active');
         };
@@ -118,13 +146,77 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- МОДУЛЬ СОЗВЕЗДИЯ ---
-    function setupConstellation() { /* ... полный код созвездия без изменений ... */ }
+    function setupConstellation() {
+        const svgNS = "http://www.w3.org/2000/svg";
+        const constellationSVG = document.getElementById('constellation-svg');
+        const connectButton = document.getElementById('connect-stars-button');
+        if (!constellationSVG) return;
 
-    // --- МОДУЛЬ РЕДАКТОРА ПЛАНЕТЫ (ПОЛНОСТЬЮ ПЕРЕПИСАННЫЙ) ---
+        const memories = [
+            "Ты пришла на квест и мы играли в гляделки", "Я написал тебе и трусил, нервничал и думал, как же ты отреагируешь",
+            "Ты пригласила меня домой и тут я тоже трусил прийти, надумал всякое", "Я пришел к тебе и вел себя, ох, какой важный курица",
+            "Я стал твоим парнем, не зная об этом", "Тут я очень долго подводил, но все же наконец сказал тебе: я тебя люблю",
+            "Я счастлив по сей день, зная, что ты моя прелесть и мы с тобой вместе, несмотря ни на что"
+        ];
+        const secretLetter = `Милая моя девочка, моя принцесса... (полный текст письма здесь)`;
+        
+        const starCoords = [{ x: 120, y: 150 }, { x: 250, y: 120 }, { x: 390, y: 180 }, { x: 530, y: 220 }, { x: 650, y: 350 }, { x: 500, y: 400 }, { x: 380, y: 320 }];
+        const lineConnections = [ [0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 3] ];
+        let visitedStars = new Set();
+        let lines = [];
+
+        function createStarPoints(cx, cy, spikes, outerRadius, innerRadius) {
+            let points = ""; let rot = Math.PI / 2 * 3; let x = cx; let y = cy; let step = Math.PI / spikes;
+            for (let i = 0; i < spikes; i++) {
+                x = cx + Math.cos(rot) * outerRadius; y = cy + Math.sin(rot) * outerRadius; points += x + "," + y + " "; rot += step;
+                x = cx + Math.cos(rot) * innerRadius; y = cy + Math.sin(rot) * innerRadius; points += x + "," + y + " "; rot += step;
+            }
+            return points;
+        }
+
+        lineConnections.forEach(conn => {
+            const p1 = starCoords[conn[0]]; const p2 = starCoords[conn[1]];
+            const line = document.createElementNS(svgNS, 'line');
+            line.setAttribute('x1', p1.x); line.setAttribute('y1', p1.y); line.setAttribute('x2', p2.x); line.setAttribute('y2', p2.y);
+            line.classList.add('constellation-line'); constellationSVG.appendChild(line); lines.push(line);
+        });
+
+        starCoords.forEach((coord, index) => {
+            const group = document.createElementNS(svgNS, 'g'); group.classList.add('star-group');
+            const star = document.createElementNS(svgNS, 'polygon');
+            star.setAttribute('points', createStarPoints(coord.x, coord.y, 5, 12, 5)); star.classList.add('star-polygon');
+            const hitbox = document.createElementNS(svgNS, 'circle');
+            hitbox.setAttribute('cx', coord.x); hitbox.setAttribute('cy', coord.y); hitbox.setAttribute('r', 20); hitbox.classList.add('star-hitbox');
+            group.append(star, hitbox);
+            group.addEventListener('click', () => {
+                if (star.classList.contains('visited')) return;
+                window.showNote(memories[index]);
+                star.classList.add('visited'); visitedStars.add(index);
+                if (visitedStars.size === memories.length) connectButton.disabled = false;
+            });
+            constellationSVG.appendChild(group);
+        });
+
+        connectButton.addEventListener('click', () => {
+            connectButton.disabled = true; let totalDelay = 0; const lineDrawDuration = 2500;
+            lines.forEach(line => {
+                setTimeout(() => {
+                    const length = Math.hypot(line.x2.baseVal.value - line.x1.baseVal.value, line.y2.baseVal.value - line.y1.baseVal.value);
+                    line.style.strokeDasharray = length; line.style.strokeDashoffset = length; line.classList.add('drawing');
+                    setTimeout(() => line.style.strokeDashoffset = 0, 50);
+                }, totalDelay);
+                totalDelay += lineDrawDuration;
+            });
+            setTimeout(() => { window.showNote(secretLetter, true); }, totalDelay);
+        });
+    }
+
+    // --- МОДУЛЬ РЕДАКТОРА ПЛАНЕТЫ ---
     function setupPlanetCreator() {
         const planetCreatorPage = document.getElementById('planet-creator');
         if (!planetCreatorPage) return;
         const svgNS = "http://www.w3.org/2000/svg";
+        const previewWrapper = document.getElementById('planet-preview-wrapper');
         const planetPreviewSVG = document.getElementById('planet-preview-svg');
         const planetNameInput = document.getElementById('planet-name');
         const oceanColorInput = document.getElementById('ocean-color');
@@ -144,19 +236,14 @@ document.addEventListener('DOMContentLoaded', () => {
             container.innerHTML = '';
             const wrapper = document.createElement('div');
             wrapper.className = 'planet-body-wrapper';
-            if (!isPreview) wrapper.style.boxShadow = `0 0 25px ${config.glowColor}`;
-            const planetBodySVG = isPreview ? planetPreviewSVG : document.createElementNS(svgNS, 'svg');
-            if (!isPreview) {
-                planetBodySVG.setAttribute('viewBox', '0 0 250 250');
-                wrapper.appendChild(planetBodySVG);
-            }
-            planetBodySVG.innerHTML = '';
-
+            if (!isPreview) wrapper.style.boxShadow = `0 0 25px ${config.glowColor}, 0 0 40px ${config.glowColor}`;
+            
+            const planetBodySVG = document.createElementNS(svgNS, 'svg');
+            planetBodySVG.setAttribute('viewBox', '0 0 250 250');
             const ocean = document.createElementNS(svgNS, 'circle');
             ocean.setAttribute('cx', '125'); ocean.setAttribute('cy', '125'); ocean.setAttribute('r', '125');
             ocean.setAttribute('fill', config.oceanColor);
             planetBodySVG.appendChild(ocean);
-
             const continentsGroup = document.createElementNS(svgNS, 'g');
             if (config.continents) config.continents.forEach(p => {
                 const plot = document.createElementNS(svgNS, 'circle');
@@ -165,13 +252,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 continentsGroup.appendChild(plot);
             });
             planetBodySVG.appendChild(continentsGroup);
+            
+            if (isPreview) {
+                container.appendChild(planetBodySVG);
+            } else {
+                 wrapper.appendChild(planetBodySVG);
+                 container.appendChild(wrapper);
+            }
 
             if (config.hasLights && !isPreview) {
                 const lights = document.createElement('div');
                 lights.className = 'civilization-lights';
                 wrapper.appendChild(lights);
             }
-            if(isPreview) container.appendChild(wrapper); else container.appendChild(wrapper);
             
             for (let i = 1; i <= config.moonCount; i++) {
                 const orbit = document.createElement('div');
@@ -179,7 +272,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const satellite = document.createElement('div');
                 satellite.className = `moon-satellite moon-satellite-${i} moon-type-${config.moonType}`;
                 orbit.appendChild(satellite);
-                container.appendChild(orbit);
+                (isPreview ? container : wrapper).appendChild(orbit);
             }
         }
         
@@ -189,8 +282,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 continents: currentContinentData, moonCount: parseInt(moonCountSelect.value, 10),
                 moonType: moonTypeSelect.value, hasLights: lightsToggle.checked,
             };
-            const previewWrapper = document.getElementById('planet-preview-wrapper');
-            renderPlanet(previewWrapper, tempConfig, true);
+            renderPlanet(planetPreviewSVG, tempConfig, true);
             moonTypeGroup.style.display = tempConfig.moonCount > 0 ? 'block' : 'none';
         }
 
