@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;700&display=swap');
 
 /* --- ОБЩИЕ СТИЛИ --- */
-body { background-color: #000; color: #fff; font-family: 'Comfortaa', cursive; margin: 0; overflow: hidden; text-align: center; }
+body { background-color: #000; color: #fff; font-family: 'Comfortaa', cursive; margin: 0; overflow-x: hidden; text-align: center; }
 
 /* --- НЕБЕСНЫЕ ТЕЛА --- */
 #sky-gradient { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -5; animation: day-night-cycle 120s linear infinite; }
@@ -15,9 +15,9 @@ body { background-color: #000; color: #fff; font-family: 'Comfortaa', cursive; m
 .moon-orbit { position: absolute; top: 50%; left: 50%; border-radius: 50%; transform: translate(-50%, -50%); }
 .moon-satellite { position: absolute; top: 50%; left: 0; border-radius: 50%; }
 .moon-orbit-1 { width: 180%; height: 180%; animation: moon-orbit-anim 10s linear infinite; }
-.moon-satellite-1 { width: 15px; height: 15px; margin-left: -7.5px; margin-top: -7.5px; transform: translateY(-50%); }
+.moon-satellite-1 { width: 15px; height: 15px; margin-left: -7.5px; transform: translateY(-50%); }
 .moon-orbit-2 { width: 280%; height: 280%; animation: moon-orbit-anim 18s linear infinite reverse; }
-.moon-satellite-2 { width: 10px; height: 10px; margin-left: -5px; margin-top: -5px; transform: translateY(-50%); }
+.moon-satellite-2 { width: 10px; height: 10px; margin-left: -5px; transform: translateY(-50%); }
 .moon-type-ice { background: radial-gradient(circle, #e0f7fa, #b2ebf2, #80deea); box-shadow: 0 0 5px #fff; }
 .moon-type-volcanic { background: radial-gradient(circle, #ffcc80, #ff7043, #d84315); box-shadow: 0 0 5px #ff7043; }
 @keyframes celestial-orbit { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
@@ -74,7 +74,7 @@ header { display: flex; justify-content: space-between; align-items: center; pad
 .creator-layout { display: flex; flex-wrap: wrap; gap: 30px; margin-top: 20px; align-items: center; justify-content: center; }
 .planet-preview-container { flex-basis: 300px; display: flex; align-items: center; justify-content: center; }
 #planet-preview-wrapper { position: relative; width: 250px; height: 250px; }
-#planet-preview-svg { width: 100%; height: 100%; cursor: crosshair; /* Убран animation */ }
+#planet-preview-svg { width: 100%; height: 100%; cursor: crosshair; }
 .planet-ocean-bg, .continent-plot { transition: fill 0.3s; }
 .planet-controls { flex-basis: 350px; text-align: left; background: rgba(255,255,255,0.05); padding: 20px; border-radius: 10px; }
 .control-group { margin-bottom: 15px; }
@@ -92,8 +92,8 @@ header { display: flex; justify-content: space-between; align-items: center; pad
 .toggle-switch input { opacity: 0; width: 0; height: 0; }
 .toggle-switch-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #333; transition: .4s; border-radius: 26px; }
 .toggle-switch-slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
-input:checked + .toggle-switch-slider { background-color: #87ceeb; }
-input:checked + .toggle-switch-slider:before { transform: translateX(24px); }
+input:checked + .toggle-switch .toggle-switch-slider { background-color: #87ceeb; }
+input:checked + .toggle-switch .toggle-switch-slider:before { transform: translateX(24px); }
 
 /* --- МОДАЛЬНОЕ ОКНО --- */
 #note-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); z-index: 1000; display: none; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease-in-out; }
@@ -101,14 +101,14 @@ input:checked + .toggle-switch-slider:before { transform: translateX(24px); }
 .modal-content { display: flex; flex-direction: column; background: rgba(20, 20, 40, 0.9); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); padding: 20px; border-radius: 15px; max-width: 90%; width: 500px; position: relative; max-height: 80vh; transform: scale(0.9); transition: transform 0.3s ease-in-out; }
 #note-modal.active .modal-content { transform: scale(1); }
 #modal-close-button { position: absolute; top: 10px; right: 15px; background: transparent; border: none; color: #fff; font-size: 30px; cursor: pointer; line-height: 1; z-index: 10; }
-#modal-text-container { padding: 15px; padding-top: 30px; overflow-y: auto; } /* ИСПРАВЛЕНО */
+#modal-text-container { padding: 15px; padding-top: 30px; overflow-y: auto; }
 #modal-text { font-size: 18px; line-height: 1.7; text-align: center; }
 #modal-text.align-left { text-align: left; }
 
 /* --- КОТ --- */
-#cat-container { position: fixed; bottom: 10px; right: 20px; z-index: 100; width: 200px; height: 150px; cursor: grab; }
+#cat-container { position: fixed; bottom: 10px; right: 20px; z-index: 100; width: 200px; height: 150px; cursor: grab; user-select: none; }
 #cat-container.dragging { cursor: grabbing; }
-#cat { position: absolute; bottom: 0; left: 40px; width: 100px; height: 95px; }
+#cat { position: absolute; bottom: 0; left: 40px; width: 100px; height: 95px; pointer-events: none; /* Чтобы клики проходили на контейнер */ }
 .cat-body, .cat-head, .ear, .cat-tail { background-color: #000; }
 .cat-body { position: absolute; bottom: 0; width: 100px; height: 50px; border-radius: 50px 50px 20px 20px; z-index: 2; }
 .cat-head { position: absolute; bottom: 35px; left: 20px; width: 60px; height: 60px; border-radius: 50%; z-index: 3; }
@@ -121,6 +121,6 @@ input:checked + .toggle-switch-slider:before { transform: translateX(24px); }
 .cat-tail { position: absolute; bottom: 5px; left: 80px; width: 15px; height: 80px; border-radius: 20px; transform-origin: bottom center; animation: tail-wag 3s ease-in-out infinite; z-index: 1; }
 @keyframes tail-wag { 0%, 100% { transform: rotate(-20deg); } 50% { transform: rotate(10deg); } }
 @keyframes blink { 0%, 90%, 100% { transform: scaleY(1); } 95% { transform: scaleY(0.1); } }
-.cat-thought-bubble { position: absolute; bottom: 150px; left: -20px; background-color: rgba(255, 255, 255, 0.9); color: #333; padding: 10px 15px; border-radius: 15px; width: 220px; text-align: center; font-size: 14px; z-index: 101; opacity: 0; animation: fadeInOut 5s ease-in-out; }
+.cat-thought-bubble { position: absolute; bottom: 150px; left: -20px; background-color: rgba(255, 255, 255, 0.9); color: #333; padding: 10px 15px; border-radius: 15px; width: 220px; text-align: center; font-size: 14px; z-index: 101; opacity: 0; animation: fadeInOut 5s ease-in-out; pointer-events: none; }
 .cat-thought-bubble::after { content: ''; position: absolute; bottom: -10px; left: 50%; margin-left: -10px; border-width: 10px; border-style: solid; border-color: rgba(255, 255, 255, 0.9) transparent transparent transparent; }
 @keyframes fadeInOut { 0% { opacity: 0; transform: translateY(10px); } 10% { opacity: 1; transform: translateY(0); } 90% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(10px); } }
